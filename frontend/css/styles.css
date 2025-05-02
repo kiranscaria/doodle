@@ -499,12 +499,13 @@ main {
 }
 
 .todays-googly span {
-    font-weight: bold;
+    font-weight: normal;
 }
 
 .todays-googly a {
     color: #1a0dab;
     text-decoration: none;
+    font-weight: normal;
 }
 
 .todays-googly a:hover {
