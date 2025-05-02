@@ -161,13 +161,20 @@ function setupTrendingSearches() {
         // Ensure dropdown is hidden by default
         trendingDropdown.style.display = 'none';
         
-        // Show trending searches only when search box is clicked
+        // Show trending searches only when search box is clicked, but not when clicking mic or lens icons
         searchBox.addEventListener('click', function(event) {
-            trendingDropdown.style.display = 'block';
-            searchBox.style.borderRadius = '24px 24px 0 0';
-            searchBox.style.borderBottomColor = 'transparent';
-            searchBox.style.boxShadow = '0 1px 6px rgba(32, 33, 36, 0.28)';
-            searchInput.focus();
+            // Check if the click was on the microphone or camera icons
+            const isMicClick = event.target.closest('.voice-search');
+            const isCameraClick = event.target.closest('.camera-search');
+            
+            // Only show trending searches if not clicking on mic or camera
+            if (!isMicClick && !isCameraClick) {
+                trendingDropdown.style.display = 'block';
+                searchBox.style.borderRadius = '24px 24px 0 0';
+                searchBox.style.borderBottomColor = 'transparent';
+                searchBox.style.boxShadow = '0 1px 6px rgba(32, 33, 36, 0.28)';
+                searchInput.focus();
+            }
         });
         
         // Remove the automatic focus on page load
@@ -317,44 +324,76 @@ function setupVoiceSearch() {
 }
 
 /**
- * Sets up Google Lens dialog functionality
+ * Sets up Google Lens drawer functionality
  */
 function setupGoogleLensDialog() {
     const cameraSearch = document.querySelector('.camera-search');
-    const lensDialogOverlay = document.getElementById('lens-dialog-overlay');
+    const lensDrawer = document.getElementById('lens-drawer');
     const lensCloseBtn = document.getElementById('lens-close-btn');
     const lensUploadLink = document.querySelector('.lens-upload-link');
+    const searchBox = document.querySelector('.search-box');
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = 'image/*';
     fileInput.style.display = 'none';
     document.body.appendChild(fileInput);
     
-    // Show dialog when camera icon is clicked
-    if (cameraSearch && lensDialogOverlay) {
+    // Show drawer when camera icon is clicked
+    if (cameraSearch && lensDrawer) {
         cameraSearch.addEventListener('click', function(e) {
             e.preventDefault();
-            lensDialogOverlay.style.display = 'flex';
-            document.body.style.overflow = 'hidden'; // Prevent scrolling
-        });
-    }
-    
-    // Close dialog when close button is clicked
-    if (lensCloseBtn) {
-        lensCloseBtn.addEventListener('click', function() {
-            lensDialogOverlay.style.display = 'none';
-            document.body.style.overflow = '';
-        });
-    }
-    
-    // Close dialog when clicking outside the dialog
-    if (lensDialogOverlay) {
-        lensDialogOverlay.addEventListener('click', function(e) {
-            if (e.target === lensDialogOverlay) {
-                lensDialogOverlay.style.display = 'none';
-                document.body.style.overflow = '';
+            e.stopPropagation(); // Prevent event bubbling
+            
+            // Toggle the drawer visibility
+            if (lensDrawer.style.display === 'block') {
+                closeLensDrawer();
+            } else {
+                // Change search box border radius when drawer is open
+                searchBox.style.borderRadius = '24px 24px 0 0';
+                searchBox.style.borderBottomColor = 'transparent';
+                searchBox.style.boxShadow = '0 1px 6px rgba(32, 33, 36, 0.28)';
+                
+                // Show the drawer
+                lensDrawer.style.display = 'block';
             }
         });
+    }
+    
+    // Close drawer when close button is clicked
+    if (lensCloseBtn) {
+        lensCloseBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation(); // Prevent event bubbling
+            closeLensDrawer();
+        });
+    }
+    
+    // Handle clicks outside the drawer
+    document.addEventListener('click', function(e) {
+        // If drawer is open and click is outside the drawer and not on the camera icon
+        if (lensDrawer.style.display === 'block' && 
+            !e.target.closest('#lens-drawer') && 
+            !e.target.closest('.camera-search')) {
+            closeLensDrawer();
+        }
+    });
+    
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && lensDrawer.style.display === 'block') {
+            closeLensDrawer();
+        }
+    });
+    
+    // Helper function to close the lens drawer
+    function closeLensDrawer() {
+        lensDrawer.style.display = 'none';
+        // Reset search box styling
+        searchBox.style.borderRadius = '24px';
+        searchBox.style.borderBottomColor = '#dfe1e5';
+        if (!document.querySelector('.search-input').value) {
+            searchBox.style.boxShadow = 'none';
+        }
     }
     
     // Handle file upload link
