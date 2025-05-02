@@ -399,6 +399,13 @@ function setupGoogleLensDialog() {
         }
     });
     
+    // Close drawer when page is scrolled
+    window.addEventListener('scroll', function() {
+        if (lensDrawer.style.display === 'block') {
+            closeLensDrawer();
+        }
+    });
+    
     // Helper function to close the lens drawer
     function closeLensDrawer() {
         lensDrawer.style.display = 'none';
