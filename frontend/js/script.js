@@ -104,6 +104,12 @@ function setupLandingPageInteractions() {
     // Setup trending searches dropdown
     setupTrendingSearches();
 
+    // Setup Google Lens dialog
+    setupGoogleLensDialog();
+    
+    // Setup voice search functionality
+    setupVoiceSearch();
+
     // Setup app drawer
     setupAppDrawer();
 }
@@ -190,6 +196,225 @@ function setupTrendingSearches() {
                 performSearch(searchText);
             });
         });
+    }
+}
+
+/**
+ * Sets up voice search functionality
+ */
+function setupVoiceSearch() {
+    const voiceSearch = document.querySelector('.voice-search');
+    const voiceDialogOverlay = document.getElementById('voice-dialog-overlay');
+    const voiceStatusText = document.getElementById('voice-status-text');
+    const voiceIcon = document.querySelector('.voice-icon');
+    
+    if (voiceSearch && voiceDialogOverlay) {
+        voiceSearch.addEventListener('click', function() {
+            // Check if browser supports the Web Speech API
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                // Create a speech recognition instance
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                const recognition = new SpeechRecognition();
+                
+                // Configure recognition settings
+                recognition.lang = 'en-US';
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                
+                // First request permission before showing the dialog
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                    .then(function(stream) {
+                        // Permission granted, stop the stream immediately
+                        stream.getTracks().forEach(track => track.stop());
+                        
+                        // Now show the voice dialog
+                        voiceDialogOverlay.style.display = 'flex';
+                        document.body.style.overflow = 'hidden'; // Prevent scrolling
+                        
+                        // Show "Speak now" for 1 second
+                        voiceStatusText.textContent = 'Speak now';
+                        
+                        // After 1 second, animate "Listening..." one letter at a time
+                        setTimeout(() => {
+                            const listeningText = 'Listening...';
+                            let currentIndex = 0;
+                            voiceStatusText.textContent = '';
+                            
+                            // Add one letter at a time with a slight delay
+                            const typingInterval = setInterval(() => {
+                                if (currentIndex < listeningText.length) {
+                                    voiceStatusText.textContent += listeningText.charAt(currentIndex);
+                                    currentIndex++;
+                                } else {
+                                    clearInterval(typingInterval);
+                                }
+                            }, 100); // 100ms between each letter
+                            
+                            voiceIcon.classList.add('listening');
+                            
+                            // Start listening
+                            try {
+                                recognition.start();
+                            } catch (e) {
+                                console.error('Speech recognition error:', e);
+                                closeVoiceDialog();
+                            }
+                        }, 1000);
+                    })
+                    .catch(function(err) {
+                        // Permission denied
+                        console.error('Microphone permission denied:', err);
+                        alert('Microphone permission denied. Please allow microphone access to use voice search.');
+                    });
+                
+                // Handle results
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    const searchInput = document.querySelector('.search-input');
+                    if (searchInput) {
+                        searchInput.value = transcript;
+                        // Close the dialog
+                        closeVoiceDialog();
+                        // Perform search with the transcript after a short delay
+                        setTimeout(() => {
+                            performSearch(transcript);
+                        }, 500);
+                    }
+                };
+                
+                // Handle errors
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error:', event.error);
+                    if (event.error === 'not-allowed') {
+                        alert('Microphone permission denied. Please allow microphone access to use voice search.');
+                    }
+                    closeVoiceDialog();
+                };
+                
+                // When recognition ends
+                recognition.onend = function() {
+                    closeVoiceDialog();
+                };
+                
+                // Stop listening after 7 seconds total (1s for "Speak now" + 6s for "Listening...")
+                setTimeout(() => {
+                    recognition.stop();
+                    closeVoiceDialog();
+                }, 7000);
+                
+                // Function to close the voice dialog
+                function closeVoiceDialog() {
+                    voiceDialogOverlay.style.display = 'none';
+                    document.body.style.overflow = '';
+                    voiceIcon.classList.remove('listening');
+                }
+            } else {
+                // Browser doesn't support speech recognition
+                alert('Your browser does not support voice search. Please try using Chrome, Edge, or Safari.');
+            }
+        });
+    }
+}
+
+/**
+ * Sets up Google Lens dialog functionality
+ */
+function setupGoogleLensDialog() {
+    const cameraSearch = document.querySelector('.camera-search');
+    const lensDialogOverlay = document.getElementById('lens-dialog-overlay');
+    const lensCloseBtn = document.getElementById('lens-close-btn');
+    const lensUploadLink = document.querySelector('.lens-upload-link');
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*';
+    fileInput.style.display = 'none';
+    document.body.appendChild(fileInput);
+    
+    // Show dialog when camera icon is clicked
+    if (cameraSearch && lensDialogOverlay) {
+        cameraSearch.addEventListener('click', function(e) {
+            e.preventDefault();
+            lensDialogOverlay.style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
+        });
+    }
+    
+    // Close dialog when close button is clicked
+    if (lensCloseBtn) {
+        lensCloseBtn.addEventListener('click', function() {
+            lensDialogOverlay.style.display = 'none';
+            document.body.style.overflow = '';
+        });
+    }
+    
+    // Close dialog when clicking outside the dialog
+    if (lensDialogOverlay) {
+        lensDialogOverlay.addEventListener('click', function(e) {
+            if (e.target === lensDialogOverlay) {
+                lensDialogOverlay.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        });
+    }
+    
+    // Handle file upload link
+    if (lensUploadLink) {
+        lensUploadLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            fileInput.click();
+        });
+    }
+    
+    // Handle file selection
+    fileInput.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+            // In a real implementation, this would upload the file
+            console.log('File selected:', this.files[0].name);
+            // For demo purposes, we'll just show an alert
+            alert('Image upload functionality would be implemented in a real application.');
+        }
+    });
+    
+    // Setup drag and drop functionality
+    const uploadArea = document.querySelector('.lens-upload-area');
+    if (uploadArea) {
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, preventDefaults, false);
+        });
+        
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, highlight, false);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, unhighlight, false);
+        });
+        
+        function highlight() {
+            uploadArea.classList.add('highlight');
+        }
+        
+        function unhighlight() {
+            uploadArea.classList.remove('highlight');
+        }
+        
+        uploadArea.addEventListener('drop', handleDrop, false);
+        
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            if (files && files[0]) {
+                // In a real implementation, this would upload the file
+                console.log('File dropped:', files[0].name);
+                // For demo purposes, we'll just show an alert
+                alert('Image upload functionality would be implemented in a real application.');
+            }
+        }
     }
 }
 
