@@ -244,6 +244,7 @@ main {
     margin: 0 auto 18px;
     box-shadow: none;
     transition: box-shadow 200ms cubic-bezier(0.4, 0.0, 0.2, 1);
+    position: relative;
 }
 
 .search-box:hover {
@@ -325,20 +326,21 @@ main {
 
 .tooltip {
     position: absolute;
-    bottom: -40px;
-    left: 50%;
-    transform: translateX(-50%);
     background-color: rgba(60, 64, 67, 0.9);
     color: white;
-    padding: 8px 12px;
-    border-radius: 4px;
+    padding: 6px 8px;
     font-size: 12px;
+    border-radius: 4px;
     white-space: nowrap;
     visibility: hidden;
     opacity: 0;
-    transition: opacity 0.2s ease, visibility 0.2s ease;
-    z-index: 100;
+    transition: opacity 0.2s;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 10px;
     pointer-events: none;
+    z-index: 100;
 }
 
 .tooltip::before {
@@ -350,6 +352,92 @@ main {
     border-width: 0 6px 6px 6px;
     border-style: solid;
     border-color: transparent transparent rgba(60, 64, 67, 0.9) transparent;
+}
+
+.voice-search:hover .tooltip,
+.camera-search:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Trending searches dropdown */
+.trending-searches-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: white;
+    border-radius: 0 0 24px 24px;
+    box-shadow: 0 4px 6px rgba(32, 33, 36, 0.28);
+    margin-top: -1px;
+    z-index: 10;
+    display: none;
+    overflow: hidden;
+    padding-top: 14px;
+}
+
+.trending-header {
+    color: #70757a;
+    font-size: 14px;
+    padding: 0 16px 8px;
+}
+
+.trending-list {
+    max-height: 386px;
+    overflow-y: auto;
+}
+
+.trending-item {
+    display: flex;
+    align-items: center;
+    padding: 9px 16px;
+    cursor: pointer;
+}
+
+.trending-item:hover {
+    background-color: #f1f3f4;
+}
+
+.trend-icon {
+    margin-right: 14px;
+    display: flex;
+    align-items: center;
+}
+
+.trend-text {
+    font-size: 16px;
+    color: #202124;
+}
+
+.trending-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px;
+}
+
+.dropdown-btn {
+    font-size: 14px;
+    height: 36px;
+    min-width: 120px;
+    padding: 0 16px;
+    background-color: #f8f9fa;
+    border: 1px solid #f8f9fa;
+    border-radius: 4px;
+    color: #3c4043;
+    cursor: pointer;
+}
+
+.trending-footer {
+    padding: 12px 16px;
+    text-align: right;
+    background-color: #f8f9fa;
+}
+
+.report-text {
+    color: #70757a;
+    font-size: 12px;
+    cursor: pointer;
 }
 
 .voice-search:hover .tooltip,

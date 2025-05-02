@@ -97,16 +97,18 @@ function performSearch(query) {
  * Sets up landing page specific interactions
  */
 function setupLandingPageInteractions() {
-    // "I'm Feeling Lucky" button
+    // Setup I'm Feeling Lucky button
     const luckyButton = document.querySelector('.lucky-btn');
     if (luckyButton) {
         luckyButton.addEventListener('click', function() {
-            // Direct to the official Google Doodles page
             window.location.href = 'https://www.google.com/doodles';
         });
     }
-    
-    // Setup app drawer toggle
+
+    // Setup trending searches dropdown
+    setupTrendingSearches();
+
+    // Setup app drawer
     setupAppDrawer();
 }
 
@@ -131,11 +133,66 @@ function setupAppDrawer() {
             }
         });
         
+        // Prevent drawer from closing when clicking inside it
+        appDrawer.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+        
         // Close app drawer when pressing escape key
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 appDrawer.classList.remove('show');
             }
+        });
+    }
+}
+
+/**
+ * Sets up trending searches dropdown functionality
+ */
+function setupTrendingSearches() {
+    const searchInput = document.querySelector('.search-input');
+    const searchBox = document.querySelector('.search-box');
+    const trendingDropdown = document.querySelector('.trending-searches-dropdown');
+    
+    if (searchInput && trendingDropdown) {
+        // Show trending searches when input is focused
+        searchInput.addEventListener('focus', function() {
+            trendingDropdown.style.display = 'block';
+            searchBox.style.borderRadius = '24px 24px 0 0';
+            searchBox.style.borderBottomColor = 'transparent';
+            searchBox.style.boxShadow = '0 1px 6px rgba(32, 33, 36, 0.28)';
+        });
+        
+        // Also show when clicking anywhere in the search box
+        searchBox.addEventListener('click', function(event) {
+            if (event.target !== searchInput) {
+                searchInput.focus();
+            }
+        });
+        
+        // Hide trending searches when clicked outside
+        document.addEventListener('click', function(event) {
+            const isClickInside = searchBox.contains(event.target);
+            
+            if (!isClickInside) {
+                trendingDropdown.style.display = 'none';
+                searchBox.style.borderRadius = '24px';
+                searchBox.style.borderBottomColor = '#dfe1e5';
+                if (!searchInput.value) {
+                    searchBox.style.boxShadow = 'none';
+                }
+            }
+        });
+        
+        // Handle trending item clicks
+        const trendingItems = document.querySelectorAll('.trending-item');
+        trendingItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const searchText = this.querySelector('.trend-text').textContent.trim();
+                searchInput.value = searchText;
+                performSearch(searchText);
+            });
         });
     }
 }
@@ -153,6 +210,52 @@ function setupSearchPageInteractions() {
         searchInput.value = decodeURIComponent(query);
         document.title = `${query} - Google Search`;
     }
+    
+    // Add search filters toggle
+    const filterToggle = document.querySelector('.search-tools-toggle');
+    const searchTools = document.querySelector('.search-tools');
+    
+    if (filterToggle && searchTools) {
+        filterToggle.addEventListener('click', function() {
+            searchTools.classList.toggle('show');
+            filterToggle.classList.toggle('active');
+            
+            // Update text based on state
+            const toggleText = filterToggle.querySelector('span');
+            if (toggleText) {
+                if (searchTools.classList.contains('show')) {
+                    toggleText.textContent = 'Hide filters';
+                } else {
+                    toggleText.textContent = 'Tools';
+                }
+            }
+        });
+    }
+    
+    // Setup search type tabs
+    const searchTabs = document.querySelectorAll('.search-tab');
+    searchTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            // Remove active class from all tabs
+            searchTabs.forEach(t => t.classList.remove('active'));
+            
+            // Add active class to clicked tab
+            this.classList.add('active');
+            
+            // Update search results based on tab (in a real app)
+            // For demo purposes, we'll just log the search type
+            console.log('Search type changed to:', this.textContent.trim());
+        });
+    });
+    
+    // Setup related searches click
+    const relatedSearches = document.querySelectorAll('.related-search');
+    relatedSearches.forEach(item => {
+        item.addEventListener('click', function() {
+            const searchText = this.textContent.trim();
+            performSearch(searchText);
+        });
+    });
     
     // Handle People Also Ask accordion
     const paaItems = document.querySelectorAll('.paa-item');
