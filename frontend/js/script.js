@@ -26,12 +26,8 @@ function setupSearchFunctionality(isSearchPage) {
         document.querySelector('.search-button') : 
         document.querySelector('.search-btn');
     
-    // Focus on search input when page loads on landing page
-    if (!isSearchPage && searchInput) {
-        setTimeout(() => {
-            searchInput.focus();
-        }, 100);
-    }
+    // Don't automatically focus on search input when page loads
+    // This ensures the trending searches dropdown only appears when clicked
     
     // Handle search submission
     if (searchInput && searchButton) {
@@ -156,20 +152,20 @@ function setupTrendingSearches() {
     const trendingDropdown = document.querySelector('.trending-searches-dropdown');
     
     if (searchInput && trendingDropdown) {
-        // Show trending searches when input is focused
-        searchInput.addEventListener('focus', function() {
+        // Ensure dropdown is hidden by default
+        trendingDropdown.style.display = 'none';
+        
+        // Show trending searches only when search box is clicked
+        searchBox.addEventListener('click', function(event) {
             trendingDropdown.style.display = 'block';
             searchBox.style.borderRadius = '24px 24px 0 0';
             searchBox.style.borderBottomColor = 'transparent';
             searchBox.style.boxShadow = '0 1px 6px rgba(32, 33, 36, 0.28)';
+            searchInput.focus();
         });
         
-        // Also show when clicking anywhere in the search box
-        searchBox.addEventListener('click', function(event) {
-            if (event.target !== searchInput) {
-                searchInput.focus();
-            }
-        });
+        // Remove the automatic focus on page load
+        // (This is handled in setupSearchFunctionality, we'll modify that next)
         
         // Hide trending searches when clicked outside
         document.addEventListener('click', function(event) {
