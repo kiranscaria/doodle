@@ -18,11 +18,131 @@
                 <div class="right-nav">
                     <a href="https://mail.google.com/" class="nav-link">Gmail</a>
                     <a href="https://www.google.com/imghp" class="nav-link">Images</a>
-                    <a href="https://www.google.com/intl/en/about/products" class="apps-icon">
-                        <svg class="gb_i" focusable="false" viewBox="0 0 24 24">
-                            <path d="M6,8c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM12,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM6,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM6,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM12,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM16,6c0,1.1 0.9,2 2,2s2,-0.9 2,-2 -0.9,-2 -2,-2 -2,0.9 -2,2zM12,8c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM18,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM18,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2z"></path>
-                        </svg>
-                    </a>
+                    <div class="apps-menu-container">
+                        <a href="#" class="apps-icon" id="apps-toggle">
+                            <svg class="gb_i" focusable="false" viewBox="0 0 24 24">
+                                <path d="M6,8c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM12,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM6,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM6,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM12,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM16,6c0,1.1 0.9,2 2,2s2,-0.9 2,-2 -0.9,-2 -2,-2 -2,0.9 -2,2zM12,8c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM18,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM18,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2z"></path>
+                            </svg>
+                        </a>
+                        <div class="app-drawer" id="app-drawer">
+                            <div class="app-drawer-content">
+                                <div class="app-item">
+                                    <a href="https://myaccount.google.com/">
+                                        <img src="https://ssl.gstatic.com/images/branding/product/1x/avatar_circle_blue_48dp.png" alt="Account">
+                                        <span>Account</span>
+                                    </a>
+                                </div>
+                                <div class="app-item">
+                                    <a href="https://www.google.com/">
+                                        <img src="https://www.gstatic.com/images/branding/product/1x/googleg_48dp.png" alt="Search">
+                                        <span>Search</span>
+                                    </a>
+                                </div>
+                                <div class="app-item">
+                                    <a href="https://maps.google.com/">
+                                        <img src="https://www.gstatic.com/images/branding/product/1x/maps_48dp.png" alt="Maps">
+                                        <span>Maps</span>
+                                    </a>
+                                </div>
+                                <div class="app-item">
+                                    <a href="https://www.youtube.com/">
+                                        <img src="https://www.gstatic.com/youtube/img/branding/favicon/favicon_144x144.png" alt="YouTube">
+                                        <span>YouTube</span>
+                                    </a>
+                                </div>
+                                <div class="app-item">
+                                    <a href="https://news.google.com/">
+                                        <img src="https://lh3.googleusercontent.com/J6_coFbogxhRI9iM864NL_liGXvsQp2AupsKei7z0cNNfDvGUmWUy20nuUhkREQyrpY4bEeIBuc=w48" alt="News">
+                                        <span>News</span>
+                                    </a>
+                                </div>
+                                <div class="app-item">
+                                    <a href="https://mail.google.com/">
+                                        <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico" alt="Gmail">
+                                        <span>Gmail</span>
+                                    </a>
+                                </div>
+                                <div class="app-item">
+                                    <a href="https://meet.google.com/">
+                                        <img src="https://fonts.gstatic.com/s/i/productlogos/meet_2020q4/v1/web-48dp/logo_meet_2020q4_color_1x_web_48dp.png" alt="Meet">
+                                        <span>Meet</span>
+                                    </a>
+                                </div>
+                                <div class="app-item">
+                                    <a href="https://chat.google.com/">
+                                        <img src="https://fonts.gstatic.com/s/i/productlogos/chat_2020q4/v1/web-48dp/logo_chat_2020q4_color_1x_web_48dp.png" alt="Chat">
+                                        <span>Chat</span>
+                                    </a>
+                                </div>
+                                <div class="app-item">
+                                    <a href="https://contacts.google.com/">
+                                        <img src="https://ssl.gstatic.com/images/branding/product/1x/contacts_48dp.png" alt="Contacts">
+                                        <span>Contacts</span>
+                                    </a>
+                                </div>
+                                <div class="app-item">
+                                    <a href="https://drive.google.com/">
+                                        <img src="https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_48dp.png" alt="Drive">
+                                        <span>Drive</span>
+                                    </a>
+                                </div>
+                                <div class="app-item">
+                                    <a href="https://calendar.google.com/">
+                                        <img src="https://ssl.gstatic.com/calendar/images/dynamiclogo_2020q4/calendar_31_2x.png" alt="Calendar" style="width:40px; height:40px;">
+                                        <span>Calendar</span>
+                                    </a>
+                                </div>
+                                <div class="app-item">
+                                    <a href="https://play.google.com/">
+                                        <img src="https://www.gstatic.com/images/branding/product/2x/play_prism_48dp.png" alt="Play">
+                                        <span>Play</span>
+                                    </a>
+                                </div>
+                                <div class="app-item">
+                                    <a href="https://photos.google.com/">
+                                        <img src="https://ssl.gstatic.com/images/branding/product/1x/photos_48dp.png" alt="Photos">
+                                        <span>Photos</span>
+                                    </a>
+                                </div>
+                                <div class="app-item">
+                                    <a href="https://translate.google.com/">
+                                        <img src="https://ssl.gstatic.com/translate/favicon.ico" alt="Translate">
+                                        <span>Translate</span>
+                                    </a>
+                                </div>
+                                <div class="app-item">
+                                    <a href="https://docs.google.com/">
+                                        <img src="https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico" alt="Docs">
+                                        <span>Docs</span>
+                                    </a>
+                                </div>
+                                <div class="app-item">
+                                    <a href="https://keep.google.com/">
+                                        <img src="https://ssl.gstatic.com/keep/keep.ico" alt="Keep">
+                                        <span>Keep</span>
+                                    </a>
+                                </div>
+                                <div class="app-item">
+                                    <a href="https://www.google.com/shopping">
+                                        <img src="https://ssl.gstatic.com/images/branding/product/1x/shopping_48dp.png" alt="Shopping">
+                                        <span>Shopping</span>
+                                    </a>
+                                </div>
+                                <div class="app-item">
+                                    <a href="https://classroom.google.com/">
+                                        <img src="https://ssl.gstatic.com/classroom/favicon.png" alt="Classroom">
+                                        <span>Classroom</span>
+                                    </a>
+                                </div>
+                                <div class="app-item">
+                                    <a href="https://earth.google.com/">
+                                        <img src="https://ssl.gstatic.com/earth/images/earth_favicon.ico" alt="Earth">
+                                        <span>Earth</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <a href="https://accounts.google.com/signin" class="signin-btn">Sign in</a>
                 </div>
             </nav>

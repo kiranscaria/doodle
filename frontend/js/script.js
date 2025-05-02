@@ -105,6 +105,39 @@ function setupLandingPageInteractions() {
             window.location.href = 'https://www.google.com/doodles';
         });
     }
+    
+    // Setup app drawer toggle
+    setupAppDrawer();
+}
+
+/**
+ * Sets up the app drawer toggle functionality
+ */
+function setupAppDrawer() {
+    const appsToggle = document.getElementById('apps-toggle');
+    const appDrawer = document.getElementById('app-drawer');
+    
+    if (appsToggle && appDrawer) {
+        // Toggle app drawer on click
+        appsToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            appDrawer.classList.toggle('show');
+        });
+        
+        // Close app drawer when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!appDrawer.contains(e.target) && !appsToggle.contains(e.target)) {
+                appDrawer.classList.remove('show');
+            }
+        });
+        
+        // Close app drawer when pressing escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                appDrawer.classList.remove('show');
+            }
+        });
+    }
 }
 
 /**

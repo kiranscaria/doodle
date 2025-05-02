@@ -59,10 +59,10 @@ nav {
 }
 
 .signin-btn {
-    background-color: #1a73e8;
+    background-color: #1967d2;
     color: white !important;
-    padding: 9px 23px !important;
-    border-radius: 4px;
+    padding: 9px 20px !important;
+    border-radius: 20px;
     font-weight: 500;
     font-size: 14px !important;
     margin-left: 8px;
@@ -73,13 +73,17 @@ nav {
 }
 
 .signin-btn:hover {
-    background-color: #2b7de9;
+    background-color: #1a5dc2;
     box-shadow: 0 1px 2px 0 rgba(66,133,244,0.3),0 1px 3px 1px rgba(66,133,244,0.15);
     text-decoration: none;
 }
 
 .nav-link {
     margin: 0 10px;
+}
+
+.apps-menu-container {
+    position: relative;
 }
 
 .apps-icon {
@@ -89,6 +93,7 @@ nav {
     width: 42px;
     height: 42px;
     margin: 0 4px;
+    cursor: pointer;
 }
 
 .apps-icon svg {
@@ -103,6 +108,95 @@ nav {
 .apps-icon:hover {
     background-color: rgba(232, 234, 237, 0.5);
     border-radius: 50%;
+}
+
+.app-drawer {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    width: 320px;
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 2px 6px 2px rgba(60,64,67,.15);
+    padding: 16px;
+    z-index: 1000;
+    display: none;
+    max-height: 500px;
+    overflow-y: auto;
+    border: 1px solid #dadce0;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,0,0,.15) transparent;
+}
+
+/* Custom scrollbar for Webkit browsers (Chrome, Safari, etc.) */
+.app-drawer::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.app-drawer::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 4px 0;
+}
+
+.app-drawer::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,.15);
+    border-radius: 20px;
+    border: 2px solid #fff;
+    background-clip: padding-box;
+}
+
+.app-drawer::-webkit-scrollbar-thumb:hover {
+    background: rgba(0,0,0,.25);
+    border: 2px solid #fff;
+    background-clip: padding-box;
+}
+
+.app-drawer.show {
+    display: block;
+}
+
+.app-drawer-content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    padding: 8px 4px;
+}
+
+.app-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.app-item a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #202124;
+    text-decoration: none;
+    padding: 8px;
+    border-radius: 12px;
+    transition: background-color 0.2s;
+}
+
+.app-item a:hover {
+    background-color: rgba(232, 234, 237, 0.5);
+    text-decoration: none;
+}
+
+.app-item img {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 12px;
+    object-fit: contain;
+}
+
+.app-item span {
+    font-size: 14px;
+    color: #202124;
+    font-weight: 400;
 }
 
 /* Main content styles */
