@@ -1,0 +1,82 @@
+{
+  "query": "is nile longer than amazon",
+  "results": {
+    "total": 112000000,
+    "time": 0.48,
+    "items": [
+      {
+        "title": "The Longest Rivers In The World - WorldAtlas",
+        "url": "https://www.worldatlas.com/articles/longest-rivers-in-the-world.html",
+        "description": "The Nile of northeastern Africa is considered the longest river in the world, while the Amazon of South America is recognized as the second longest. Both rivers flow through diverse landscapes and support rich ecosystems."
+      },
+      {
+        "title": "Nile River - National Geographic Society",
+        "url": "https://www.nationalgeographic.org/encyclopedia/nile-river/",
+        "description": "The Nile River flows from south to north through eastern Africa. It begins in the rivers that flow into Lake Victoria (located in modern-day Uganda, Tanzania, and Kenya), and empties into the Mediterranean Sea more than 6,600 kilometers (4,100 miles) to the north, making it the longest river in the world."
+      },
+      {
+        "title": "Nile River | Facts, Definition, Map, History, & Location",
+        "url": "https://www.britannica.com/place/Nile-River",
+        "description": "Nile River, Arabic Baḥr Al-Nīl or Nahr Al-Nīl, the longest river in the world, called the father of African rivers. It rises south of the Equator and flows northward through northeastern Africa to drain into the Mediterranean Sea."
+      },
+      {
+        "title": "Is the Amazon River the longest river in the world?",
+        "url": "https://www.nationalgeographic.com/science/article/amazon-longer-than-nile-river",
+        "description": "For centuries, the Nile has been considered the world's longest river, with the Amazon coming in a close second. But scientists have been studying the lengths of some of the world's longer rivers, and there is now some debate over which of these two magnificent waterways is actually longer."
+      },
+      {
+        "title": "Amazon River | Location, Length, Map, & Facts | Britannica",
+        "url": "https://www.britannica.com/place/Amazon-River",
+        "description": "Amazon River, Portuguese Rio Amazonas, Spanish Río Amazonas, also called Río Marañón and Rio Solimões, the greatest river of South America and the largest drainage system in the world in terms of the volume of its flow and the area of its basin."
+      }
+    ],
+    "peopleAlsoAsk": [
+      "Which is the longest river in the world: Nile or Amazon?",
+      "How much longer is the Nile than the Amazon?",
+      "Which is the second longest river in the world?",
+      "What are the 5 longest rivers in the world?"
+    ],
+    "aiOverview": {
+      "content": "The Nile River is longer than the Amazon River. The Nile is generally considered to be the longest river in the world at approximately 6,650 kilometers (4,130 miles), while the Amazon River is the second longest at about 6,400 kilometers (4,000 miles).\n\nHowever, there is some scientific debate about this conclusion:\n\n- Some studies suggest the Amazon could be longer depending on how the source and mouth are defined\n- A 2007 study claimed the Amazon is actually about 6,800 km (4,225 miles) long\n- The Amazon carries substantially more water than the Nile (about 209,000 cubic meters per second compared to the Nile's 2,800)\n\nWhile the Nile is generally recognized as longer, this remains a subject of ongoing scientific measurement and debate.",
+      "sources": [
+        {
+          "name": "nationalgeographic.com",
+          "title": "Nile River | Facts, Definition, Map, History, & Location"
+        },
+        {
+          "name": "britannica.com",
+          "title": "Amazon River | Location, Length, Map, & Facts"
+        },
+        {
+          "name": "worldatlas.com",
+          "title": "The Longest Rivers in the World"
+        }
+      ]
+    },
+    "knowledgePanel": {
+      "title": "Nile",
+      "subtitle": "River in Africa",
+      "details": {
+        "Length": "6,650 km (4,130 mi)",
+        "Source": "Lake Victoria",
+        "Mouth": "Mediterranean Sea",
+        "Basin size": "3,400,000 km²",
+        "Countries": "Egypt, Sudan, South Sudan, Ethiopia, Uganda, Congo, Kenya, Tanzania, Rwanda, Burundi, Eritrea"
+      },
+      "similar": [
+        {
+          "name": "Amazon",
+          "image": "amazon-river.jpg"
+        },
+        {
+          "name": "Yangtze",
+          "image": "yangtze-river.jpg"
+        },
+        {
+          "name": "Mississippi",
+          "image": "mississippi-river.jpg"
+        }
+      ]
+    }
+  }
+}
