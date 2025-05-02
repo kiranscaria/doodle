@@ -45,16 +45,18 @@ nav {
     padding: 0 15px;
 }
 
-.left-nav, .right-nav {
+.left-nav,
+.right-nav {
     display: flex;
     align-items: center;
 }
 
-.left-nav a, .right-nav .nav-link {
+.left-nav a,
+.right-nav .nav-link {
     padding: 0 8px;
     margin: 0 5px;
     font-size: 13px;
-    color: rgba(0,0,0,0.87);
+    color: rgba(0, 0, 0, 0.87);
     line-height: 24px;
 }
 
@@ -74,7 +76,7 @@ nav {
 
 .signin-btn:hover {
     background-color: #1a5dc2;
-    box-shadow: 0 1px 2px 0 rgba(66,133,244,0.3),0 1px 3px 1px rgba(66,133,244,0.15);
+    box-shadow: 0 1px 2px 0 rgba(66, 133, 244, 0.3), 0 1px 3px 1px rgba(66, 133, 244, 0.15);
     text-decoration: none;
 }
 
@@ -117,7 +119,7 @@ nav {
     width: 320px;
     background-color: #fff;
     border-radius: 16px;
-    box-shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 2px 6px 2px rgba(60,64,67,.15);
+    box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .3), 0 2px 6px 2px rgba(60, 64, 67, .15);
     padding: 16px;
     z-index: 1000;
     display: none;
@@ -125,7 +127,7 @@ nav {
     overflow-y: auto;
     border: 1px solid #dadce0;
     scrollbar-width: thin;
-    scrollbar-color: rgba(0,0,0,.15) transparent;
+    scrollbar-color: rgba(0, 0, 0, .15) transparent;
 }
 
 /* Custom scrollbar for Webkit browsers (Chrome, Safari, etc.) */
@@ -140,14 +142,14 @@ nav {
 }
 
 .app-drawer::-webkit-scrollbar-thumb {
-    background: rgba(0,0,0,.15);
+    background: rgba(0, 0, 0, .15);
     border-radius: 20px;
     border: 2px solid #fff;
     background-clip: padding-box;
 }
 
 .app-drawer::-webkit-scrollbar-thumb:hover {
-    background: rgba(0,0,0,.25);
+    background: rgba(0, 0, 0, .25);
     border: 2px solid #fff;
     background-clip: padding-box;
 }
@@ -275,7 +277,7 @@ main {
     border: none;
     outline: none;
     font-size: 16px;
-    color: rgba(0,0,0,.87);
+    color: rgba(0, 0, 0, .87);
     word-wrap: break-word;
     -webkit-tap-highlight-color: transparent;
 }
@@ -283,8 +285,8 @@ main {
 .search-buttons-right {
     display: flex;
     align-items: center;
-    gap: 4px;
-    padding: 0 8px;
+    gap: 0;
+    padding: 0 0 0 8px;
     margin-left: auto;
 }
 
@@ -297,15 +299,28 @@ main {
     align-items: center;
     justify-content: center;
     position: relative;
+    vertical-align: middle;
+    margin-right: -6px;
 }
 
 .voice-search:hover, .camera-search:hover {
     background-color: rgba(232, 234, 237, 0.5);
 }
 
-.voice-search svg, .camera-search svg {
+.voice-search svg,
+.camera-search svg {
     width: 24px;
     height: 24px;
+}
+
+.camera-search .lens-icon {
+    width: 24px;
+    height: 24px;
+    filter: grayscale(100%) brightness(0.6);
+    display: block;
+    margin: auto;
+    position: relative;
+    top: -2px;
 }
 
 .tooltip {
@@ -350,7 +365,8 @@ main {
     padding-top: 18px;
 }
 
-.search-btn, .lucky-btn {
+.search-btn,
+.lucky-btn {
     background-color: #f8f9fa;
     border: 1px solid #f8f9fa;
     border-radius: 4px;
@@ -365,14 +381,16 @@ main {
     user-select: none;
 }
 
-.search-btn:hover, .lucky-btn:hover {
+.search-btn:hover,
+.lucky-btn:hover {
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
     background-color: #f8f9fa;
     border: 1px solid #dadce0;
     color: #202124;
 }
 
-.search-btn:focus, .lucky-btn:focus {
+.search-btn:focus,
+.lucky-btn:focus {
     border: 1px solid #4285f4;
     outline: none;
 }
@@ -423,7 +441,7 @@ footer {
     padding: 15px 30px;
     border-bottom: 1px solid #dadce0;
     font-size: 15px;
-    color: rgba(0,0,0,.54);
+    color: rgba(0, 0, 0, .54);
 }
 
 .footer-bottom {
@@ -434,14 +452,16 @@ footer {
     background-color: #f2f2f2;
 }
 
-.footer-left, .footer-right {
+.footer-left,
+.footer-right {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
     padding: 15px;
 }
 
-.footer-left a, .footer-right a {
+.footer-left a,
+.footer-right a {
     color: #70757a;
     padding: 15px;
     white-space: nowrap;
@@ -452,7 +472,7 @@ footer {
     .footer-bottom {
         justify-content: space-around;
     }
-    
+
     .footer-center {
         order: 1;
         width: 100%;
@@ -465,11 +485,12 @@ footer {
     .footer-bottom {
         flex-direction: column;
     }
-    
-    .footer-left, .footer-right {
+
+    .footer-left,
+    .footer-right {
         justify-content: center;
     }
-    
+
     .footer-right {
         margin-top: 12px;
     }
