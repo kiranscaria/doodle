@@ -93,11 +93,25 @@ function performSearch(query) {
  * Sets up landing page specific interactions
  */
 function setupLandingPageInteractions() {
-    // Setup I'm Feeling Lucky button
-    const luckyButton = document.querySelector('.lucky-btn');
-    if (luckyButton) {
-        luckyButton.addEventListener('click', function() {
-            window.location.href = 'https://www.google.com/doodles';
+    // Setup all I'm Feeling Lucky buttons
+    const luckyButtons = document.querySelectorAll('.lucky-btn');
+    if (luckyButtons.length > 0) {
+        luckyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                window.location.href = 'https://www.google.com/doodles';
+            });
+        });
+    }
+    
+    // Setup all Google Search buttons
+    const searchButtons = document.querySelectorAll('.search-btn');
+    if (searchButtons.length > 0) {
+        searchButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const searchInput = document.querySelector('.search-input');
+                const query = searchInput ? searchInput.value.trim() : '';
+                performSearch(query);
+            });
         });
     }
 
