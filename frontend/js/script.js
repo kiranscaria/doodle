@@ -343,6 +343,7 @@ function setupVoiceSearch() {
 function setupGoogleLensDialog() {
     const cameraSearch = document.querySelector('.camera-search');
     const lensDrawer = document.getElementById('lens-drawer');
+    const lensModal = document.getElementById('lens-modal');
     const lensCloseBtn = document.getElementById('lens-close-btn');
     const lensUploadLink = document.querySelector('.lens-upload-link');
     const searchBox = document.querySelector('.search-box');
@@ -352,50 +353,73 @@ function setupGoogleLensDialog() {
     fileInput.style.display = 'none';
     document.body.appendChild(fileInput);
     
-    // Show drawer when camera icon is clicked
-    if (cameraSearch && lensDrawer) {
+    // Show drawer or modal when camera icon is clicked
+    if (cameraSearch) {
+        console.log('Camera search element found:', cameraSearch);
+        
         cameraSearch.addEventListener('click', function(e) {
+            console.log('Camera search clicked');
             e.preventDefault();
             e.stopPropagation(); // Prevent event bubbling
             
-            // Toggle the drawer visibility
-            if (lensDrawer.style.display === 'block') {
-                closeLensDrawer();
+            // Check which page we're on and show the appropriate UI
+            if (lensDrawer) {
+                console.log('Using lens drawer');
+                // Landing page - use drawer
+                // Toggle the drawer visibility
+                if (lensDrawer.style.display === 'block') {
+                    closeLensDrawer();
+                } else {
+                    // Position the drawer below the search box
+                    lensDrawer.style.display = 'block';
+                }
+            } else if (lensModal) {
+                console.log('Using lens modal');
+                // Search page - use modal
+                lensModal.style.display = 'flex';
             } else {
-                // Change search box border radius when drawer is open
-                searchBox.style.borderRadius = '24px 24px 0 0';
-                searchBox.style.borderBottomColor = 'transparent';
-                searchBox.style.boxShadow = '0 1px 6px rgba(32, 33, 36, 0.28)';
-                
-                // Show the drawer
-                lensDrawer.style.display = 'block';
+                console.log('Neither lens drawer nor lens modal found');
             }
         });
+    } else {
+        console.log('Camera search element not found');
     }
     
-    // Close drawer when close button is clicked
+    // Close drawer/modal when close button is clicked
     if (lensCloseBtn) {
         lensCloseBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            e.stopPropagation(); // Prevent event bubbling
-            closeLensDrawer();
+            e.stopPropagation();
+            if (lensDrawer) {
+                closeLensDrawer();
+            } else if (lensModal) {
+                lensModal.style.display = 'none';
+            }
         });
     }
     
     // Handle clicks outside the drawer
     document.addEventListener('click', function(e) {
-        // If drawer is open and click is outside the drawer and not on the camera icon
-        if (lensDrawer.style.display === 'block' && 
+        // Close drawer/modal when clicking outside of it
+        if (lensDrawer && lensDrawer.style.display === 'block' && 
             !e.target.closest('#lens-drawer') && 
             !e.target.closest('.camera-search')) {
             closeLensDrawer();
+        } else if (lensModal && lensModal.style.display === 'flex' && 
+            !e.target.closest('.lens-modal-content') && 
+            !e.target.closest('.camera-search')) {
+            lensModal.style.display = 'none';
         }
     });
     
-    // Close on Escape key
+    // Close drawer/modal with Escape key
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && lensDrawer.style.display === 'block') {
-            closeLensDrawer();
+        if (e.key === 'Escape') {
+            if (lensDrawer && lensDrawer.style.display === 'block') {
+                closeLensDrawer();
+            } else if (lensModal && lensModal.style.display === 'flex') {
+                lensModal.style.display = 'none';
+            }
         }
     });
     
@@ -417,13 +441,15 @@ function setupGoogleLensDialog() {
         }
     }
     
-    // Handle file upload link
-    if (lensUploadLink) {
-        lensUploadLink.addEventListener('click', function(e) {
+    // Handle file upload link click
+    const allUploadLinks = document.querySelectorAll('.lens-upload-link');
+    allUploadLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
             e.preventDefault();
+            e.stopPropagation();
             fileInput.click();
         });
-    }
+    });
     
     // Handle file selection
     fileInput.addEventListener('change', function() {
@@ -436,45 +462,46 @@ function setupGoogleLensDialog() {
     });
     
     // Setup drag and drop functionality
-    const uploadArea = document.querySelector('.lens-upload-area');
-    if (uploadArea) {
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            uploadArea.addEventListener(eventName, preventDefaults, false);
-        });
-        
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-        
-        ['dragenter', 'dragover'].forEach(eventName => {
-            uploadArea.addEventListener(eventName, highlight, false);
-        });
-        
-        ['dragleave', 'drop'].forEach(eventName => {
-            uploadArea.addEventListener(eventName, unhighlight, false);
-        });
-        
-        function highlight() {
-            uploadArea.classList.add('highlight');
-        }
-        
-        function unhighlight() {
-            uploadArea.classList.remove('highlight');
-        }
-        
-        uploadArea.addEventListener('drop', handleDrop, false);
-        
-        function handleDrop(e) {
-            const dt = e.dataTransfer;
-            const files = dt.files;
-            if (files && files[0]) {
-                // In a real implementation, this would upload the file
-                console.log('File dropped:', files[0].name);
-                // For demo purposes, we'll just show an alert
-                alert('Image upload functionality would be implemented in a real application.');
+    const uploadAreas = document.querySelectorAll('.lens-upload-area');
+    if (uploadAreas.length > 0) {
+        uploadAreas.forEach(uploadArea => {
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
             }
-        }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight() {
+                uploadArea.classList.add('highlight');
+            }
+
+            function unhighlight() {
+                uploadArea.classList.remove('highlight');
+            }
+
+            uploadArea.addEventListener('drop', handleDrop, false);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                if (files.length) {
+                    // Handle the dropped file(s)
+                    console.log('File dropped:', files[0].name);
+                    // Here you would typically upload the file or process it
+                }
+            }
+        });
     }
 }
 
@@ -568,11 +595,5 @@ function setupSearchPageInteractions() {
         });
     }
     
-    // Handle camera search
-    const cameraSearch = document.querySelector('.camera-search');
-    if (cameraSearch) {
-        cameraSearch.addEventListener('click', function() {
-            alert('Image search activated! (This would use the camera API in a real implementation)');
-        });
-    }
+    // Camera search is handled in setupGoogleLensDialog function
 }
