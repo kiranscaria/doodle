@@ -251,6 +251,7 @@ header {
     margin-left: auto;
     gap: 8px;
     margin-right: 10px;
+    position: relative;
 }
 
 .settings-icon,
@@ -273,12 +274,105 @@ header {
     height: 24px;
 }
 
+/* App Drawer Styles */
+.app-drawer {
+    position: absolute;
+    top: 45px;
+    right: 0;
+    width: 320px;
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .3), 0 2px 6px 2px rgba(60, 64, 67, .15);
+    padding: 16px;
+    z-index: 1000;
+    display: none;
+    max-height: 500px;
+    overflow-y: auto;
+    border: 1px solid #dadce0;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, .15) transparent;
+}
+
+/* Custom scrollbar for Webkit browsers (Chrome, Safari, etc.) */
+.app-drawer::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.app-drawer::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 4px 0;
+}
+
+.app-drawer::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, .15);
+    border-radius: 20px;
+    border: 2px solid #fff;
+    background-clip: padding-box;
+}
+
+.app-drawer::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, .25);
+    border: 2px solid #fff;
+    background-clip: padding-box;
+}
+
+.app-drawer.show {
+    display: block;
+}
+
+.app-drawer-content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    padding: 8px 4px;
+}
+
+.app-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.app-item a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #202124;
+    text-decoration: none;
+    padding: 8px;
+    border-radius: 12px;
+    transition: background-color 0.2s;
+}
+
+.app-item a:hover {
+    background-color: rgba(232, 234, 237, 0.5);
+    text-decoration: none;
+}
+
+.app-item img {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 12px;
+    object-fit: contain;
+}
+
+.app-item span {
+    font-size: 14px;
+    color: #202124;
+    font-weight: 400;
+}
+
 .signin-btn {
     background-color: #1967d2;
     color: white !important;
     padding: 9px 20px !important;
     border-radius: 20px;
     font-weight: 500;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
     font-size: 14px !important;
     cursor: pointer;
     margin-left: 8px;
@@ -340,19 +434,21 @@ header {
 }
 
 .tools-button:hover {
-    color: #202124;
-    text-decoration: none;
+color: #202124;
+text-decoration: none;
 }
 
 .more-icon {
-    display: flex;
-    align-items: center;
-    margin-left: 10px;
+display: flex;
+align-items: center;
+margin-left: 10px;
 }
 
 .more-icon-svg {
-    width: 24px;
-    height: 24px;
+width: 24px;
+height: 24px;
+fill: #70757a;
+margin-right: 4px;
     fill: #70757a;
     margin-right: 4px;
 }

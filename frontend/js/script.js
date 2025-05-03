@@ -663,4 +663,7 @@ function setupSearchPageInteractions() {
     }
     
     // Camera search is handled in setupGoogleLensDialog function
+    
+    // Setup app drawer
+    setupAppDrawer();
 }
