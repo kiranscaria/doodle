@@ -80,12 +80,18 @@ function setupSearchFunctionality(isSearchPage) {
 /**
  * Performs search and navigates to search page
  * @param {string} query - Search query
+ * @param {boolean} feelingLucky - Whether this is an "I'm Feeling Lucky" search
  */
-function performSearch(query) {
+function performSearch(query, feelingLucky = false) {
     if (query && query.trim() !== '') {
-        // In a real app, this would make an API call
-        // For now, we'll just navigate to the search page with the query
-        window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+        if (feelingLucky) {
+            // For "I'm Feeling Lucky", we would normally go directly to the first result
+            // Since this is a demo, we'll simulate this by adding a parameter to the URL
+            window.location.href = `search.html?q=${encodeURIComponent(query)}&lucky=true`;
+        } else {
+            // Regular search - navigate to the search page with the query
+            window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+        }
     }
 }
 
@@ -98,7 +104,14 @@ function setupLandingPageInteractions() {
     if (luckyButtons.length > 0) {
         luckyButtons.forEach(button => {
             button.addEventListener('click', function() {
-                window.location.href = 'https://www.google.com/doodles';
+                const searchInput = document.querySelector('.search-input');
+                if (searchInput && searchInput.value.trim() !== '') {
+                    // When there is text in the search box, go directly to Wikipedia
+                    window.location.href = 'https://en.wikipedia.org/wiki/Amazon_River';
+                } else {
+                    // If the search box is empty, go to Google Doodles
+                    window.location.href = 'https://doodles.google/';
+                }
             });
         });
     }
@@ -136,15 +149,26 @@ function setupAppDrawer() {
     const appDrawer = document.getElementById('app-drawer');
     
     if (appsToggle && appDrawer) {
+        // Remove any existing event listeners (to prevent duplicates)
+        const newAppsToggle = appsToggle.cloneNode(true);
+        appsToggle.parentNode.replaceChild(newAppsToggle, appsToggle);
+        
         // Toggle app drawer on click
-        appsToggle.addEventListener('click', function(e) {
+        newAppsToggle.addEventListener('click', function(e) {
             e.preventDefault();
+            e.stopPropagation();
             appDrawer.classList.toggle('show');
+            
+            // Close settings drawer if it's open
+            const settingsDrawer = document.getElementById('settings-drawer');
+            if (settingsDrawer && settingsDrawer.classList.contains('show')) {
+                settingsDrawer.classList.remove('show');
+            }
         });
         
         // Close app drawer when clicking outside
         document.addEventListener('click', function(e) {
-            if (!appDrawer.contains(e.target) && !appsToggle.contains(e.target)) {
+            if (appDrawer.classList.contains('show') && !appDrawer.contains(e.target) && !newAppsToggle.contains(e.target)) {
                 appDrawer.classList.remove('show');
             }
         });
@@ -160,6 +184,20 @@ function setupAppDrawer() {
                 appDrawer.classList.remove('show');
             }
         });
+        
+        // Add tooltip functionality
+        const tooltip = newAppsToggle.querySelector('.tooltip');
+        if (tooltip) {
+            newAppsToggle.addEventListener('mouseenter', function() {
+                tooltip.style.visibility = 'visible';
+                tooltip.style.opacity = '1';
+            });
+            
+            newAppsToggle.addEventListener('mouseleave', function() {
+                tooltip.style.visibility = 'hidden';
+                tooltip.style.opacity = '0';
+            });
+        }
     }
 }
 
@@ -172,9 +210,14 @@ function setupSettingsDrawer() {
     const settingsCloseBtn = document.getElementById('settings-close-btn');
     
     if (settingsToggle && settingsDrawer) {
+        // Remove any existing event listeners (to prevent duplicates)
+        const newSettingsToggle = settingsToggle.cloneNode(true);
+        settingsToggle.parentNode.replaceChild(newSettingsToggle, settingsToggle);
+        
         // Toggle settings drawer on click
-        settingsToggle.addEventListener('click', function(e) {
+        newSettingsToggle.addEventListener('click', function(e) {
             e.preventDefault();
+            e.stopPropagation();
             settingsDrawer.classList.toggle('show');
             
             // Close app drawer if it's open
@@ -184,19 +227,37 @@ function setupSettingsDrawer() {
             }
         });
         
-        // Close settings drawer when clicking the close button
+        // Clone and replace the close button to remove any existing event listeners
         if (settingsCloseBtn) {
-            settingsCloseBtn.addEventListener('click', function() {
+            const newSettingsCloseBtn = settingsCloseBtn.cloneNode(true);
+            settingsCloseBtn.parentNode.replaceChild(newSettingsCloseBtn, settingsCloseBtn);
+            
+            // Close settings drawer when clicking the close button
+            newSettingsCloseBtn.addEventListener('click', function() {
                 settingsDrawer.classList.remove('show');
             });
         }
         
         // Close settings drawer when clicking outside
         document.addEventListener('click', function(e) {
-            if (!settingsDrawer.contains(e.target) && !settingsToggle.contains(e.target)) {
+            if (settingsDrawer.classList.contains('show') && !settingsDrawer.contains(e.target) && !newSettingsToggle.contains(e.target)) {
                 settingsDrawer.classList.remove('show');
             }
         });
+        
+        // Add tooltip functionality
+        const tooltip = newSettingsToggle.querySelector('.tooltip');
+        if (tooltip) {
+            newSettingsToggle.addEventListener('mouseenter', function() {
+                tooltip.style.visibility = 'visible';
+                tooltip.style.opacity = '1';
+            });
+            
+            newSettingsToggle.addEventListener('mouseleave', function() {
+                tooltip.style.visibility = 'hidden';
+                tooltip.style.opacity = '0';
+            });
+        }
         
         // Prevent drawer from closing when clicking inside it
         settingsDrawer.addEventListener('click', function(e) {
@@ -535,7 +596,6 @@ function setupGoogleLensDialog() {
         });
     }
 }
-
 /**
  * Sets up search page specific interactions
  */
@@ -549,6 +609,50 @@ function setupSearchPageInteractions() {
         searchInput.value = decodeURIComponent(query);
         document.title = `${query} - Google Search`;
     }
+    
+    setupAppDrawer();
+    setupSettingsDrawer();
+    setupPeopleAlsoAsk();
+    setupFeaturedSnippet();
+}
+
+/**
+ * Sets up the featured snippet collapsible functionality
+ */
+function setupFeaturedSnippet() {
+    const featuredSnippet = document.querySelector('.featured-snippet');
+    const showMoreButton = document.querySelector('.show-more-button');
+    
+    if (featuredSnippet && showMoreButton) {
+        showMoreButton.addEventListener('click', function() {
+            const isExpanded = featuredSnippet.getAttribute('data-expanded') === 'true';
+            featuredSnippet.setAttribute('data-expanded', !isExpanded);
+        });
+    }
+}
+
+/**
+ * Sets up the People also ask section interactivity
+ */
+function setupPeopleAlsoAsk() {
+    const paaItems = document.querySelectorAll('.paa-item');
+    
+    paaItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const isExpanded = this.getAttribute('data-expanded') === 'true';
+            
+            // Close all other items first
+            paaItems.forEach(otherItem => {
+                if (otherItem !== this) {
+                    otherItem.setAttribute('data-expanded', 'false');
+                }
+            });
+            
+            // Toggle current item
+            this.setAttribute('data-expanded', !isExpanded ? 'true' : 'false');
+        });
+    });
+}
     
     // Add search filters toggle
     const filterToggle = document.querySelector('.search-tools-toggle');
@@ -726,4 +830,3 @@ function setupSearchPageInteractions() {
     
     // Setup settings drawer
     setupSettingsDrawer();
-}
