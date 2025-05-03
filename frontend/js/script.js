@@ -156,10 +156,67 @@ function setupAppDrawer() {
         
         // Close app drawer when pressing escape key
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
+            if (e.key === 'Escape' && appDrawer.classList.contains('show')) {
                 appDrawer.classList.remove('show');
             }
         });
+    }
+}
+
+/**
+ * Sets up the settings drawer toggle functionality
+ */
+function setupSettingsDrawer() {
+    const settingsToggle = document.getElementById('settings-toggle');
+    const settingsDrawer = document.getElementById('settings-drawer');
+    const settingsCloseBtn = document.getElementById('settings-close-btn');
+    
+    if (settingsToggle && settingsDrawer) {
+        // Toggle settings drawer on click
+        settingsToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            settingsDrawer.classList.toggle('show');
+            
+            // Close app drawer if it's open
+            const appDrawer = document.getElementById('app-drawer');
+            if (appDrawer && appDrawer.classList.contains('show')) {
+                appDrawer.classList.remove('show');
+            }
+        });
+        
+        // Close settings drawer when clicking the close button
+        if (settingsCloseBtn) {
+            settingsCloseBtn.addEventListener('click', function() {
+                settingsDrawer.classList.remove('show');
+            });
+        }
+        
+        // Close settings drawer when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!settingsDrawer.contains(e.target) && !settingsToggle.contains(e.target)) {
+                settingsDrawer.classList.remove('show');
+            }
+        });
+        
+        // Prevent drawer from closing when clicking inside it
+        settingsDrawer.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+        
+        // Close settings drawer when Escape key is pressed
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && settingsDrawer.classList.contains('show')) {
+                settingsDrawer.classList.remove('show');
+            }
+        });
+        
+        // Make the Sign in button functional
+        const signInBtn = settingsDrawer.querySelector('.settings-sign-in-btn');
+        if (signInBtn) {
+            signInBtn.addEventListener('click', function() {
+                window.location.href = 'https://accounts.google.com/ServiceLogin?hl=en&passive=true&continue=https://www.google.com/';
+            });
+        }
     }
 }
 
@@ -666,4 +723,7 @@ function setupSearchPageInteractions() {
     
     // Setup app drawer
     setupAppDrawer();
+    
+    // Setup settings drawer
+    setupSettingsDrawer();
 }

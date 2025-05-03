@@ -256,22 +256,217 @@ header {
 
 .settings-icon,
 .apps-icon {
-    width: 24px;
-    height: 24px;
+    width: 40px;
+    height: 40px;
     margin: 0 4px;
     cursor: pointer;
     opacity: 0.7;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
 }
 
 .settings-icon:hover,
 .apps-icon:hover {
     opacity: 1;
+    cursor: pointer;
+    background-color: rgba(60, 64, 67, 0.08);
+}
+
+.settings-icon:hover .tooltip,
+.apps-icon:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .settings-icon svg,
 .apps-icon svg {
     width: 24px;
     height: 24px;
+}
+
+.tooltip {
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background-color: rgba(60, 64, 67, 0.9);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+/* Settings Drawer Styles */
+.settings-drawer {
+    position: absolute;
+    top: 45px;
+    right: 0;
+    width: 360px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    display: none;
+    overflow: hidden;
+}
+
+.settings-drawer.show {
+    display: block;
+}
+
+.settings-drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.settings-drawer-logo {
+    font-size: 22px;
+    font-weight: 500;
+    color: #202124;
+    font-family: 'Google Sans', Arial, sans-serif;
+}
+
+.settings-close-btn {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.settings-close-btn:hover {
+    background-color: rgba(60, 64, 67, 0.08);
+}
+
+.settings-drawer-content {
+    padding: 16px;
+}
+
+.settings-sign-in-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.settings-sign-in-btn {
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 24px;
+    padding: 8px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'Google Sans', Arial, sans-serif;
+}
+
+.settings-divider {
+    height: 1px;
+    background-color: rgba(0, 0, 0, 0.08);
+    margin: 8px 0 16px;
+}
+
+.settings-section-title {
+    font-size: 14px;
+    color: #5f6368;
+    margin-bottom: 16px;
+    font-weight: 500;
+}
+
+.settings-option {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.settings-option:hover {
+    background-color: rgba(60, 64, 67, 0.08);
+}
+
+.settings-option-icon {
+    margin-right: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+}
+
+.settings-option-text {
+    flex: 1;
+}
+
+.settings-option-title {
+    font-size: 14px;
+    color: #202124;
+    font-weight: 400;
+}
+
+.settings-option-status {
+    font-size: 14px;
+    color: #5f6368;
+    margin-left: 8px;
+}
+
+.settings-bottom-options {
+    display: flex;
+    margin-top: 16px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    padding-top: 8px;
+}
+
+.settings-bottom-option {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.settings-bottom-option:hover {
+    background-color: rgba(60, 64, 67, 0.08);
+}
+
+.settings-footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    font-size: 12px;
+    color: #5f6368;
+}
+
+.settings-footer-link {
+    color: #5f6368;
+    text-decoration: none;
+}
+
+.settings-footer-link:hover {
+    text-decoration: underline;
+}
+
+.settings-footer-separator {
+    margin: 0 8px;
 }
 
 /* App Drawer Styles */
