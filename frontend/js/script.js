@@ -589,10 +589,103 @@ function setupSearchPageInteractions() {
     
     // Handle voice search
     const voiceSearch = document.querySelector('.voice-search');
-    if (voiceSearch) {
-        voiceSearch.addEventListener('click', function() {
-            alert('Voice search activated! (This would use the Web Speech API in a real implementation)');
-        });
+    const voiceModal = document.getElementById('voice-modal');
+    const voiceCloseBtn = document.getElementById('voice-close-btn');
+    
+    if (voiceSearch && voiceModal) {
+        // Setup Web Speech API if available
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = true;
+            recognition.lang = 'en-US';
+            
+            let finalTranscript = '';
+            
+            recognition.onstart = function() {
+                console.log('Voice recognition started');
+                document.querySelector('.voice-instruction').textContent = 'Speak now';
+                document.getElementById('voice-detected-text').textContent = '';
+            };
+            
+            recognition.onresult = function(event) {
+                let interimTranscript = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const transcript = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) {
+                        finalTranscript += transcript;
+                    } else {
+                        interimTranscript += transcript;
+                    }
+                }
+                
+                // Update the UI with the transcript
+                if (finalTranscript || interimTranscript) {
+                    document.getElementById('voice-detected-text').textContent = finalTranscript || interimTranscript;
+                    // Change instruction to empty when user starts speaking
+                    document.querySelector('.voice-instruction').textContent = '';
+                }
+            };
+            
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error', event.error);
+                document.querySelector('.voice-instruction').textContent = 'Error';
+                document.getElementById('voice-detected-text').textContent = event.error;
+                setTimeout(() => {
+                    voiceModal.style.display = 'none';
+                }, 1500);
+            };
+            
+            recognition.onend = function() {
+                console.log('Voice recognition ended');
+                if (finalTranscript) {
+                    // Redirect to search results with the transcript as query
+                    window.location.href = 'search.html?q=' + encodeURIComponent(finalTranscript);
+                } else {
+                    document.querySelector('.voice-instruction').textContent = 'Didn\'t catch that';
+                    document.getElementById('voice-detected-text').textContent = 'Try again';
+                    setTimeout(() => {
+                        voiceModal.style.display = 'none';
+                    }, 1500);
+                }
+            };
+            
+            // Start recognition when voice search is clicked
+            voiceSearch.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                finalTranscript = '';
+                recognition.start();
+            });
+            
+            // Stop recognition when close button is clicked
+            if (voiceCloseBtn) {
+                voiceCloseBtn.addEventListener('click', function() {
+                    recognition.stop();
+                });
+            }
+            
+            // Stop recognition when clicking outside the modal
+            voiceModal.addEventListener('click', function(e) {
+                if (e.target === voiceModal) {
+                    recognition.stop();
+                }
+            });
+            
+            // Stop recognition when ESC key is pressed
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && voiceModal.style.display === 'flex') {
+                    recognition.stop();
+                }
+            });
+        } else {
+            // Fallback for browsers that don't support Speech Recognition
+            voiceSearch.addEventListener('click', function() {
+                alert('Speech recognition is not supported in your browser.');
+                voiceModal.style.display = 'none';
+            });
+        }
     }
     
     // Camera search is handled in setupGoogleLensDialog function
