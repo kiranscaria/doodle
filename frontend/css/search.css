@@ -40,24 +40,41 @@ header {
     z-index: 100;
 }
 
+.header-content {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 20px 30px 0;
+    width: 100%;
+}
+
 .header-top {
     display: flex;
     align-items: center;
     padding-bottom: 8px;
+    justify-content: space-between;
+    max-width: 1140px;
+    margin: 0 auto;
 }
 
 .logo-container {
-    margin-right: 20px;
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+    padding-top: 4px;
 }
 
 .logo {
     height: 30px;
-    margin-top: 7px;
+    width: 92px;
+    margin-top: 0;
+    object-fit: contain;
 }
 
 .search-container {
     flex-grow: 1;
-    max-width: 692px;
+    max-width: 690px;
+    width: 100%;
+    margin: 0 auto;
 }
 
 .search-box {
@@ -65,21 +82,39 @@ header {
     align-items: center;
     border: 1px solid #dfe1e5;
     border-radius: 24px;
-    height: 46px;
-    padding: 0 8px 0 14px;
+    height: 48px;
+    padding: 0 16px;
     background-color: #fff;
-    box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+    box-shadow: 0 2px 8px rgba(32, 33, 36, 0.4);
+    width: 100%;
+    max-width: 690px;
+    transition: box-shadow 200ms cubic-bezier(0.4, 0.0, 0.2, 1);
+    position: relative;
 }
 
 .search-box:hover {
-    box-shadow: 0 1px 6px rgba(32, 33, 36, 0.38);
+    box-shadow: 0 3px 10px rgba(32, 33, 36, 0.4);
+    border-color: rgba(223, 225, 229, 0);
+}
+
+.search-box:focus-within {
+    box-shadow: 0 4px 12px rgba(64, 60, 67, 0.4);
+    border-color: rgba(223, 225, 229, 0);
 }
 
 .search-icon {
     color: #9aa0a6;
     height: 20px;
     width: 20px;
-    padding: 0 8px;
+    margin-right: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-icon svg {
+    height: 20px;
+    width: 20px;
 }
 
 .search-input {
@@ -88,22 +123,84 @@ header {
     border: none;
     outline: none;
     font-size: 16px;
+    color: rgba(0, 0, 0, .87);
+    word-wrap: break-word;
+    -webkit-tap-highlight-color: transparent;
 }
 
-.search-clear,
-.voice-search,
-.camera-search {
+.search-clear {
     width: 24px;
     height: 24px;
     margin: 0 8px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.search-clear svg,
-.voice-search svg,
-.camera-search svg {
+.search-buttons-right {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 0 0 0 8px;
+    margin-left: auto;
+}
+
+.voice-search, .camera-search {
+    width: 42px;
+    height: 42px;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.search-clear svg {
     width: 24px;
     height: 24px;
+}
+
+.voice-search svg {
+    width: 24px;
+    height: 24px;
+}
+
+.lens-icon {
+    width: 24px;
+    height: 24px;
+    filter: grayscale(100%) brightness(0.6) opacity(0.8);
+}
+
+.separator-line {
+    height: 24px;
+    width: 1px;
+    background-color: #dfe1e5;
+    margin: 0 8px;
+}
+
+.tooltip {
+    position: absolute;
+    background-color: #3c4043;
+    color: #fff;
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    white-space: nowrap;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+}
+
+.voice-search:hover .tooltip,
+.camera-search:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
 }
 
 .search-button {
@@ -113,6 +210,9 @@ header {
     background-color: transparent;
     border: none;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .search-button svg {
@@ -121,17 +221,25 @@ header {
     fill: #4285f4;
 }
 
+.header-left {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
 .header-right {
     display: flex;
     align-items: center;
-    margin-left: 30px;
+    justify-content: flex-end;
+    margin-left: auto;
+    gap: 8px;
 }
 
 .settings-icon,
 .apps-icon {
     width: 24px;
     height: 24px;
-    margin: 0 15px;
+    margin: 0 8px;
     cursor: pointer;
     opacity: 0.7;
 }
@@ -155,6 +263,7 @@ header {
     font-weight: 500;
     font-size: 14px;
     cursor: pointer;
+    margin-left: 8px;
 }
 
 .signin-btn:hover {
@@ -211,6 +320,9 @@ main {
     display: flex;
     padding: 0 16px;
     margin-top: 16px;
+    max-width: 1140px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .search-results {
@@ -520,6 +632,11 @@ footer {
     background-color: #f2f2f2;
     padding: 16px;
     margin-top: auto;
+}
+
+.footer-content {
+    max-width: 1140px;
+    margin: 0 auto;
 }
 
 .location {
