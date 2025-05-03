@@ -225,115 +225,89 @@ function setupTrendingSearches() {
  */
 function setupVoiceSearch() {
     const voiceSearch = document.querySelector('.voice-search');
-    const voiceDialogOverlay = document.getElementById('voice-dialog-overlay');
-    const voiceStatusText = document.getElementById('voice-status-text');
-    const voiceIcon = document.querySelector('.voice-icon');
+    const voiceModal = document.getElementById('voice-modal');
+    const voiceCloseBtn = document.getElementById('voice-close-btn');
     
-    if (voiceSearch && voiceDialogOverlay) {
-        voiceSearch.addEventListener('click', function() {
-            // Check if browser supports the Web Speech API
-            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-                // Create a speech recognition instance
-                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-                const recognition = new SpeechRecognition();
-                
-                // Configure recognition settings
-                recognition.lang = 'en-US';
-                recognition.continuous = false;
-                recognition.interimResults = false;
-                
-                // First request permission before showing the dialog
-                navigator.mediaDevices.getUserMedia({ audio: true })
-                    .then(function(stream) {
-                        // Permission granted, stop the stream immediately
-                        stream.getTracks().forEach(track => track.stop());
-                        
-                        // Now show the voice dialog
-                        voiceDialogOverlay.style.display = 'flex';
-                        document.body.style.overflow = 'hidden'; // Prevent scrolling
-                        
-                        // Show "Speak now" for 1 second
-                        voiceStatusText.textContent = 'Speak now';
-                        
-                        // After 1 second, animate "Listening..." one letter at a time
-                        setTimeout(() => {
-                            const listeningText = 'Listening...';
-                            let currentIndex = 0;
-                            voiceStatusText.textContent = '';
-                            
-                            // Add one letter at a time with a slight delay
-                            const typingInterval = setInterval(() => {
-                                if (currentIndex < listeningText.length) {
-                                    voiceStatusText.textContent += listeningText.charAt(currentIndex);
-                                    currentIndex++;
-                                } else {
-                                    clearInterval(typingInterval);
-                                }
-                            }, 100); // 100ms between each letter
-                            
-                            voiceIcon.classList.add('listening');
-                            
-                            // Start listening
-                            try {
-                                recognition.start();
-                            } catch (e) {
-                                console.error('Speech recognition error:', e);
-                                closeVoiceDialog();
-                            }
-                        }, 1000);
-                    })
-                    .catch(function(err) {
-                        // Permission denied
-                        console.error('Microphone permission denied:', err);
-                        alert('Microphone permission denied. Please allow microphone access to use voice search.');
-                    });
-                
-                // Handle results
-                recognition.onresult = function(event) {
-                    const transcript = event.results[0][0].transcript;
-                    const searchInput = document.querySelector('.search-input');
-                    if (searchInput) {
-                        searchInput.value = transcript;
-                        // Close the dialog
-                        closeVoiceDialog();
-                        // Perform search with the transcript after a short delay
-                        setTimeout(() => {
-                            performSearch(transcript);
-                        }, 500);
+    if (voiceSearch && voiceModal) {
+        // Setup Web Speech API if available
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = true;
+            recognition.lang = 'en-US';
+            
+            let finalTranscript = '';
+            
+            recognition.onstart = function() {
+                console.log('Voice recognition started');
+                document.querySelector('.voice-instruction').textContent = 'Speak now';
+                document.getElementById('voice-detected-text').textContent = '';
+            };
+            
+            recognition.onresult = function(event) {
+                let interimTranscript = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const transcript = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) {
+                        finalTranscript += transcript;
+                    } else {
+                        interimTranscript += transcript;
                     }
-                };
-                
-                // Handle errors
-                recognition.onerror = function(event) {
-                    console.error('Speech recognition error:', event.error);
-                    if (event.error === 'not-allowed') {
-                        alert('Microphone permission denied. Please allow microphone access to use voice search.');
-                    }
-                    closeVoiceDialog();
-                };
-                
-                // When recognition ends
-                recognition.onend = function() {
-                    closeVoiceDialog();
-                };
-                
-                // Stop listening after 7 seconds total (1s for "Speak now" + 6s for "Listening...")
-                setTimeout(() => {
-                    recognition.stop();
-                    closeVoiceDialog();
-                }, 7000);
-                
-                // Function to close the voice dialog
-                function closeVoiceDialog() {
-                    voiceDialogOverlay.style.display = 'none';
-                    document.body.style.overflow = '';
-                    voiceIcon.classList.remove('listening');
                 }
-            } else {
-                // Browser doesn't support speech recognition
-                alert('Your browser does not support voice search. Please try using Chrome, Edge, or Safari.');
+                
+                // Update the UI with the transcript
+                if (finalTranscript || interimTranscript) {
+                    document.getElementById('voice-detected-text').textContent = finalTranscript || interimTranscript;
+                    // Change instruction to empty when user starts speaking
+                    document.querySelector('.voice-instruction').textContent = '';
+                }
+            };
+            
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error', event.error);
+                document.querySelector('.voice-instruction').textContent = 'Error';
+                document.getElementById('voice-detected-text').textContent = event.error;
+                setTimeout(() => {
+                    voiceModal.style.display = 'none';
+                }, 1500);
+            };
+            
+            recognition.onend = function() {
+                console.log('Voice recognition ended');
+                if (finalTranscript) {
+                    // Redirect to search results with the transcript as query
+                    window.location.href = 'search.html?q=' + encodeURIComponent(finalTranscript);
+                } else {
+                    document.querySelector('.voice-instruction').textContent = 'Didn\'t catch that';
+                    document.getElementById('voice-detected-text').textContent = 'Try again';
+                    setTimeout(() => {
+                        voiceModal.style.display = 'none';
+                    }, 1500);
+                }
+            };
+            
+            // Start recognition when voice search is clicked
+            voiceSearch.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                finalTranscript = '';
+                voiceModal.style.display = 'flex';
+                recognition.start();
+            });
+            
+            // Stop recognition when close button is clicked
+            if (voiceCloseBtn) {
+                voiceCloseBtn.addEventListener('click', function() {
+                    recognition.stop();
+                });
             }
-        });
+        } else {
+            // Browser doesn't support speech recognition
+            voiceSearch.addEventListener('click', function() {
+                alert('Your browser does not support voice search. Please try using Chrome or Edge.');
+            });
+        }
     }
 }
 

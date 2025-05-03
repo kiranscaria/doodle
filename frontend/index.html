@@ -162,7 +162,7 @@
                     </div>
                     <input type="text" class="search-input" aria-label="Search">
                     <div class="search-buttons-right">
-                        <div class="voice-search">
+                        <div class="voice-search" id="voice-search">
                             <svg class="goxjub" focusable="false" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path fill="#5f6368" d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"></path>
                             </svg>
@@ -388,15 +388,35 @@
     </div>
     
     <!-- Voice Search Dialog -->
-    <div class="voice-dialog-overlay" id="voice-dialog-overlay">
-        <div class="voice-dialog">
-            <div class="voice-dialog-content">
-                <div class="voice-status-text" id="voice-status-text">Listening...</div>
-                <div class="voice-icon">
-                    <svg class="voice-mic-icon" focusable="false" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path fill="#ea4335" d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"></path>
+    <!-- Voice Search Modal -->
+    <div class="voice-modal" id="voice-modal" onclick="if(event.target === this) this.style.display='none';">
+        <div class="voice-modal-content">
+            <div class="voice-modal-header">
+                <button class="voice-close-btn" id="voice-close-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="#5f6368"/>
                     </svg>
+                </button>
+            </div>
+            <div class="voice-modal-body">
+                <div class="voice-text-container">
+                    <div class="voice-instruction">Speak now</div>
+                    <div class="voice-detected-text" id="voice-detected-text"></div>
                 </div>
+                <div class="voice-animation">
+                    <div class="voice-mic">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <path fill="#EA4335" d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"></path>
+                        </svg>
+                    </div>
+                    <div class="voice-waves">
+                        <div class="wave wave1"></div>
+                        <div class="wave wave2"></div>
+                        <div class="wave wave3"></div>
+                        <div class="wave wave4"></div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
