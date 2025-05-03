@@ -141,20 +141,19 @@ header {
 .search-buttons-right {
     display: flex;
     align-items: center;
-    gap: 0;
-    padding: 0 0 0 8px;
-    margin-left: auto;
+    margin-right: 1px;
 }
 
 .voice-search, .camera-search {
-    width: 42px;
-    height: 42px;
+    width: 32px;
+    height: 32px;
     cursor: pointer;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
+    margin: 0 1px;
 }
 
 .search-clear svg {
@@ -170,14 +169,14 @@ header {
 .lens-icon {
     width: 24px;
     height: 24px;
-    filter: grayscale(100%) brightness(0.6) opacity(0.8);
+    filter: grayscale(100%) brightness(0.5) opacity(0.9);
 }
 
 .separator-line {
     height: 24px;
     width: 1px;
     background-color: #dfe1e5;
-    margin: 0 8px;
+    margin: 0 2px;
 }
 
 .tooltip {
@@ -204,12 +203,13 @@ header {
 }
 
 .search-button {
-    padding: 0 8px;
-    height: 44px;
-    width: 44px;
+    padding: 0;
+    height: 40px;
+    width: 36px;
     background-color: transparent;
     border: none;
     cursor: pointer;
+    margin-left: 0;
     display: flex;
     align-items: center;
     justify-content: center;
