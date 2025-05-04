@@ -1,0 +1,12 @@
+{
+    "name": "google-doodle",
+    "version": "1.0.0",
+    "description": "Google Doodle clone",
+    "scripts": {
+        "start": "serve frontend",
+        "build": "cp -r frontend build"
+    },
+    "dependencies": {
+        "serve": "^14.0.0"
+    }
+}
