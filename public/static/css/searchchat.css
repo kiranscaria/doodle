@@ -1,0 +1,611 @@
+/* ---------- chat toggle button ---------- */
+.sc-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 0;
+  padding: 12px 16px;
+  background: #f1f8fe;
+  border: 1px solid #e8f0fe;
+  border-radius: 24px;
+  color: #1a73e8;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: fit-content;
+}
+
+.sc-toggle:hover {
+  background: #e8f0fe;
+  box-shadow: 0 1px 3px rgba(32, 33, 36, 0.1);
+}
+
+.sc-toggle:focus-visible {
+  outline: 2px solid #1a73e8;
+  outline-offset: 2px;
+}
+
+/* Icon-only toggle button (next to 3-dots menu) */
+.sc-toggle-icon {
+  width: 26px;
+  height: 26px;
+  padding: 4px;
+  margin-right: 4px;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  vertical-align: middle;
+}
+
+.sc-toggle-icon svg {
+  opacity: 0.65;
+  transition: opacity 0.15s ease, fill 0.15s ease;
+}
+
+.sc-toggle-icon:hover {
+  background-color: rgba(60, 64, 67, 0.08);
+}
+
+.sc-toggle-icon:hover svg {
+  opacity: 0.9;
+  fill: #1a73e8;
+}
+
+.sc-toggle-icon:active {
+  background-color: rgba(60, 64, 67, 0.12);
+}
+
+.sc-toggle-icon:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.3);
+}
+
+/* Tooltip for the icon button */
+.sc-toggle-icon::after {
+  content: "Ask about the Amazon River";
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #202124;
+  color: white;
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.sc-toggle-icon:hover::after {
+  opacity: 0.9;
+  visibility: visible;
+}
+
+/* ---------- chat panel ---------- */
+.sc-panel {
+  position: fixed;
+  top: calc(120px + 3vh); /* Position 3% of viewport height below the header */
+  right: -370px; /* Start off-screen */
+  width: 350px;
+  height: auto; /* Let height be determined by top and bottom properties */
+  max-height: none; /* Remove max-height to use full available space */
+  background: #fff;
+  box-shadow: -2px 0 8px rgba(60, 64, 67, 0.15), 0 4px 16px rgba(60, 64, 67, 0.15);
+  display: flex;
+  flex-direction: column;
+  transition: right 0.25s cubic-bezier(0.4, 0.0, 0.2, 1);
+  z-index: 99; /* Just below header's z-index of 100, but above other content */
+  border-left: 1px solid #dadce0;
+  border-radius: 8px 0 0 8px; /* Add rounded corners on the left side */
+  overflow: hidden;
+  will-change: transform; /* Optimize for animation performance */
+  bottom: 10px; /* Extend much closer to the bottom of the page */
+}
+
+.sc-panel.open {
+  right: 0; /* Slide in from right */
+}
+
+/* No overlay - drawer appears without affecting the rest of the UI */
+.sc-overlay {
+  display: none; /* Hide the overlay completely */
+}
+
+.sc-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #dadce0;
+  background-color: #f8f9fa;
+  color: #202124;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.sc-toolbar-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.sc-chip {
+  display: inline-flex;
+  align-items: center;
+  background: #e8f0fe;
+  color: #1a73e8;
+  border-radius: 16px;
+  padding: 4px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+}
+
+.sc-toolbar-actions {
+  display: flex;
+  margin-left: auto;
+  gap: 12px;
+}
+
+.sc-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  position: relative;
+}
+
+.sc-icon-btn:hover {
+  background-color: rgba(26, 115, 232, 0.08);
+}
+
+.sc-icon-btn:active {
+  background-color: rgba(26, 115, 232, 0.12);
+}
+
+.sc-icon-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Tooltip styles */
+.sc-tooltip {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.1s ease-in;
+  z-index: 100;
+  margin-top: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  visibility: hidden;
+}
+
+.sc-icon-btn:hover .sc-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.sc-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background-color: #fff;
+  overscroll-behavior: contain; /* Prevent scroll chaining */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+
+.sc-bubble {
+  max-width: 85%;
+  margin-bottom: 16px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  font-size: 15px;
+  line-height: 1.6;
+  box-shadow: 0 1px 2px rgba(32, 33, 36, 0.1);
+  transition: box-shadow 0.2s;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.sc-bubble:hover {
+  box-shadow: 0 2px 4px rgba(32, 33, 36, 0.15);
+}
+
+.sc-bubble.user {
+  margin-left: auto;
+  background: #e8f0fe;
+  color: #1a73e8;
+  border: 1px solid #d2e3fc;
+}
+
+.sc-bubble.bot {
+  background: #fff;
+  color: #202124;
+  border: 1px solid #e0e0e0;
+}
+
+.sc-cite {
+  font-size: 11px;
+  vertical-align: super;
+  cursor: pointer;
+  color: #1a73e8;
+  font-weight: bold;
+  margin-left: 2px;
+  transition: color 0.2s;
+}
+
+.sc-cite:hover {
+  color: #174ea6;
+  text-decoration: underline;
+}
+
+.sc-input-row {
+  display: flex;
+  gap: 12px;
+  padding: 16px 20px;
+  border-top: 1px solid #e0e0e0;
+  background-color: #f8f9fa;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
+  min-height: 72px; /* Ensure consistent height for the input area */
+  box-sizing: border-box;
+}
+
+#sc-input {
+  flex: 1;
+  border: 1px solid #e0e0e0;
+  font-size: 14px;
+  outline: none;
+  padding: 12px 16px;
+  border-radius: 24px;
+  background: #fff;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+#sc-input:focus {
+  border-color: #1a73e8;
+  box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+}
+
+.sc-send-btn {
+  border: none;
+  background: #1a73e8;
+  color: #fff;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.1s;
+  box-shadow: 0 1px 3px rgba(32, 33, 36, 0.2);
+}
+
+.sc-send-btn:hover {
+  background: #1765cc;
+}
+
+.sc-send-btn:active {
+  transform: scale(0.95);
+}
+
+/* Source citation tooltip */
+.sc-tooltip {
+  position: absolute;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.2);
+  padding: 16px;
+  max-width: 320px;
+  z-index: 1000;
+  font-size: 13px;
+  line-height: 1.5;
+  display: none;
+  border: 1px solid #e0e0e0;
+  animation: tooltipFade 0.2s ease;
+}
+
+@keyframes tooltipFade {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.sc-tooltip-title {
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #202124;
+}
+
+.sc-tooltip-url {
+  color: #1a73e8;
+  word-break: break-all;
+  font-size: 12px;
+}
+
+.sc-tooltip-url:hover {
+  text-decoration: underline;
+}
+
+/* Save menu styles */
+.sc-save-menu {
+  min-width: 220px;
+}
+
+.sc-save-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.sc-save-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.sc-save-option:hover {
+  background-color: #f1f3f4;
+}
+
+.sc-save-option img {
+  width: 16px;
+  height: 16px;
+}
+
+/* Toast notification */
+.sc-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #323232;
+  color: white;
+  padding: 12px 16px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  font-size: 14px;
+}
+
+/* Note styles */
+.sc-message-note {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #dadce0;
+  padding: 12px;
+  margin: 12px 0;
+}
+
+.sc-note-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #ebedef;
+}
+
+.sc-note-header h3 {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a73e8;
+  margin: 0;
+}
+
+/* Modal dialog for export */
+.sc-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.sc-modal {
+  background-color: white;
+  border-radius: 8px;
+  max-width: 480px;
+  width: 90%;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  animation: slideIn 0.2s ease-in-out;
+}
+
+.sc-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #dadce0;
+}
+
+.sc-modal-header h3 {
+  font-size: 18px;
+  font-weight: 500;
+  color: #202124;
+  margin: 0;
+}
+
+.sc-modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sc-modal-content {
+  padding: 20px;
+}
+
+.sc-export-options {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.sc-export-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  flex: 1;
+}
+
+.sc-export-option:hover {
+  background-color: #f1f3f4;
+}
+
+.sc-export-option span {
+  font-size: 14px;
+  color: #202124;
+}
+
+.sc-export-progress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 0;
+}
+
+.sc-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #e8eaed;
+  border-radius: 50%;
+  border-top-color: #1a73e8;
+  animation: spinner 1s linear infinite;
+}
+
+.sc-export-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 0;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes spinner {
+  to { transform: rotate(360deg); }
+}
+
+.sc-toast svg {
+  flex-shrink: 0;
+}
+
+/* Toast animation */
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.fade-out {
+  animation: fadeOut 0.5s forwards;
+}
+
+/* Typing animation */
+.sc-bubble.typing {
+  padding: 10px 16px;
+}
+
+@keyframes ellipsisDot {
+  0%, 20% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.sc-bubble.typing em::after {
+  content: '...';
+  display: inline-block;
+  animation: ellipsisDot 1.5s infinite;
+  letter-spacing: 2px;
+}
+
+/* Input focus animation */
+.sc-input-row.focused {
+  border-color: #1a73e8;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .sc-toggle {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .sc-panel.open {
+    max-height: 500px;
+  }
+  
+  .sc-messages {
+    max-height: 300px;
+  }
+  
+  .sc-bubble {
+    max-width: 90%;
+  }
+}
