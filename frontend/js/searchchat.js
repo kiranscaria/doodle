@@ -1,8 +1,8 @@
 // --------------- helpers ---------------
-function $(sel, ctx=document){ return ctx.querySelector(sel); }
-function $$(sel, ctx=document){ return [...ctx.querySelectorAll(sel)]; }
-function el(html){
-  const t=document.createElement('template'); t.innerHTML=html.trim();
+function $(sel, ctx = document) { return ctx.querySelector(sel); }
+function $$(sel, ctx = document) { return [...ctx.querySelectorAll(sel)]; }
+function el(html) {
+  const t = document.createElement('template'); t.innerHTML = html.trim();
   return t.content.firstChild;
 }
 
@@ -42,17 +42,17 @@ window.addEventListener('DOMContentLoaded', async () => {
   saveBtn = document.getElementById('sc-save');
   closeBtn = document.getElementById('sc-close');
   autoOpenSetting = document.getElementById('sc-auto-open-setting');
-  
+
   console.log('SearchChat elements initialized:', { panel, toggle, messagesEl, inputEl });
-  
+
   // Show toggle only on search page
   if (window.location.pathname.includes('search.html') || true) {
     toggle.hidden = false;
   }
-  
+
   // Load user preferences
   loadUserPreferences();
-  
+
   // Initialize settings toggle
   if (autoOpenSetting) {
     autoOpenSetting.checked = shouldAutoOpen;
@@ -61,7 +61,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       saveUserPreferences();
     });
   }
-  
+
   // Auto-open the drawer if enabled
   if (shouldAutoOpen && window.location.pathname.includes('search.html')) {
     openPanel();
@@ -105,15 +105,15 @@ window.addEventListener('DOMContentLoaded', async () => {
       }
     }
   };
-  
+
   // Display the search query and only the first message
   $('#sc-query').textContent = convo.query;
   renderBubble(convo.messages[0]);
 
   // Set up event listeners after elements are initialized
-  toggle.addEventListener('click', function(e) {
+  toggle.addEventListener('click', function (e) {
     console.log('Toggle button clicked');
-    
+
     // Toggle the panel state - if open, close it; if closed, open it
     if (panel.classList.contains('open')) {
       closePanel();
@@ -121,39 +121,39 @@ window.addEventListener('DOMContentLoaded', async () => {
       openPanel();
     }
   });
-  
+
   closeBtn.addEventListener('click', (e) => {
     e.preventDefault();
     closePanel();
   });
-  
+
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && panel.classList.contains('open')) {
       closePanel();
     }
   });
-  
+
   createBtn.addEventListener('click', (e) => {
     e.preventDefault();
     handleCreateNote();
   });
-  
+
   saveBtn.addEventListener('click', (e) => {
     e.preventDefault();
     handleSaveToServices();
   });
-  
+
   formEl.addEventListener('submit', handleSubmit);
-  
+
   // Add input focus event to show subtle animation
   inputEl.addEventListener('focus', () => {
     inputEl.parentElement.classList.add('focused');
   });
-  
+
   inputEl.addEventListener('blur', () => {
     inputEl.parentElement.classList.remove('focused');
   });
-  
+
   // Close tooltip when clicking elsewhere
   document.addEventListener('click', e => {
     if (activeTooltip && !e.target.closest('.sc-cite')) {
@@ -170,12 +170,12 @@ function openPanel() {
     console.error('Panel element not found!');
     return;
   }
-  
+
   // Smoothly open the panel without affecting other elements
   panel.classList.add('open');
   panel.setAttribute('aria-hidden', 'false');
   toggle.setAttribute('aria-expanded', 'true');
-  
+
   // Focus the input field after the animation completes
   setTimeout(() => {
     if (inputEl) inputEl.focus();
@@ -188,39 +188,39 @@ function closePanel() {
     console.error('Panel element not found!');
     return;
   }
-  
+
   // Smoothly close the panel without affecting other elements
   panel.classList.remove('open');
   panel.setAttribute('aria-hidden', 'true');
   toggle.setAttribute('aria-expanded', 'false');
-  
+
   // Return focus to the toggle button
   if (toggle) toggle.focus();
 }
-function renderBubble(m){
+function renderBubble(m) {
   // Check if this is a typing indicator
   const isTyping = m.text.includes('<em>Thinking…</em>');
-  
+
   // Process citations if not a typing indicator
   const withCites = isTyping ? m.text : m.text.replace(/\[(\d+)]/g,
-    (_,id)=>`<sup class="sc-cite" data-id="${id}">[${id}]</sup>`);
-  
+    (_, id) => `<sup class="sc-cite" data-id="${id}">[${id}]</sup>`);
+
   // Determine the CSS class for the bubble
   // Treat both 'bot' and 'assistant' as the same role for styling
   const roleClass = (m.role === 'bot' || m.role === 'assistant') ? 'bot' : m.role;
-  
+
   // Create bubble element with appropriate classes
   const bubble = el(
     `<div class="sc-bubble ${roleClass} ${isTyping ? 'typing' : ''}">${withCites}</div>`
   );
-  
+
   // Create a wrapper message element
   const messageEl = el(`<div class="sc-message"></div>`);
   messageEl.appendChild(bubble);
-  
+
   messagesEl.appendChild(messageEl);
   messagesEl.scrollTop = messagesEl.scrollHeight;
-  
+
   // Add animation for new messages
   if (!isTyping) {
     bubble.style.opacity = '0';
@@ -237,17 +237,17 @@ function renderBubble(m){
 messagesEl.addEventListener('click', e => {
   const cite = e.target.closest('.sc-cite');
   if (!cite) return;
-  
+
   // Remove existing tooltip if any
   if (activeTooltip) {
     activeTooltip.remove();
     activeTooltip = null;
   }
-  
+
   const sourceId = cite.dataset.id;
   const src = convo.sources[sourceId];
   if (!src) return;
-  
+
   // Create and position tooltip
   const tooltip = el(`
     <div class="sc-tooltip">
@@ -255,23 +255,23 @@ messagesEl.addEventListener('click', e => {
       <a href="${src.url}" target="_blank" class="sc-tooltip-url">${src.url}</a>
     </div>
   `);
-  
+
   document.body.appendChild(tooltip);
-  
+
   // Position the tooltip near the citation
   const citeRect = cite.getBoundingClientRect();
   const tooltipLeft = Math.min(
-    citeRect.left, 
+    citeRect.left,
     window.innerWidth - 340 // Ensure tooltip doesn't go off-screen
   );
-  
+
   tooltip.style.left = `${tooltipLeft}px`;
   tooltip.style.top = `${citeRect.bottom + 10}px`;
   tooltip.style.display = 'block';
-  
+
   // Store the active tooltip
   activeTooltip = tooltip;
-  
+
   e.stopPropagation();
 });
 
@@ -303,18 +303,18 @@ function handleCreateNote() {
   if (convo && convo.messages && convo.messages.length > 1) {
     // Generate a title based on the conversation
     const query = document.getElementById('sc-query').textContent || 'Search Chat';
-    const noteTitle = `Summary of "${query}"`;  
-  
+    const noteTitle = `Summary of "${query}"`;
+
     // Extract content from messages for the summary
     let contentToSummarize = '';
     convo.messages.forEach(msg => {
       if (msg.role === 'system') return; // Skip system messages
       contentToSummarize += `${msg.role === 'assistant' ? 'SearchChat: ' : 'You: '}${msg.text}\n`;
     });
-    
+
     // Generate a simple summary (in a real app, this could use AI)
     const summaryText = generateSummary(contentToSummarize, query);
-    
+
     // Create a summary note and add it to the conversation
     const summaryNote = {
       role: 'system',
@@ -323,10 +323,10 @@ function handleCreateNote() {
       text: summaryText,
       timestamp: new Date().toISOString()
     };
-    
+
     // Add to conversation data
     convo.messages.push(summaryNote);
-    
+
     // Create and append the note element
     const noteElement = el(`
       <div class="sc-message sc-message-note">
@@ -341,10 +341,10 @@ function handleCreateNote() {
         </div>
       </div>
     `);
-    
+
     messagesEl.appendChild(noteElement);
     messagesEl.scrollTop = messagesEl.scrollHeight;
-    
+
     // Show a toast notification
     const toast = el(`
       <div class="sc-toast">
@@ -355,7 +355,7 @@ function handleCreateNote() {
       </div>
     `);
     document.body.appendChild(toast);
-    
+
     // Remove toast after delay
     setTimeout(() => {
       toast.classList.add('fade-out');
@@ -372,7 +372,7 @@ function handleCreateNote() {
       </div>
     `);
     document.body.appendChild(toast);
-    
+
     setTimeout(() => {
       toast.classList.add('fade-out');
       setTimeout(() => toast.remove(), 300);
@@ -386,16 +386,16 @@ function generateSummary(content, query) {
   // For now, we'll create a simple summary
   const lines = content.split('\n').filter(line => line.trim() !== '');
   let summary = `This is a summary of your conversation about "${query}":\n\n`;
-  
+
   // Add key points (simplified version)
   summary += "Key points discussed:\n";
-  
+
   // Extract some points from the conversation
   const pointsExtracted = new Set();
   lines.forEach(line => {
     // Skip short lines or lines that start with "You:"
     if (line.length < 40 || line.startsWith('You:')) return;
-    
+
     // Extract a potential point (first 60 chars)
     const point = line.substring(0, 60).trim();
     if (!point.endsWith('.')) {
@@ -404,20 +404,20 @@ function generateSummary(content, query) {
       pointsExtracted.add(point);
     }
   });
-  
+
   // Add up to 3 points
   const points = Array.from(pointsExtracted).slice(0, 3);
   points.forEach((point, i) => {
-    summary += `${i+1}. ${point}\n`;
+    summary += `${i + 1}. ${point}\n`;
   });
-  
+
   if (points.length === 0) {
     summary += "- No specific points identified\n";
   }
-  
+
   // Add conclusion
   summary += "\nThis summary was automatically generated based on your conversation.";
-  
+
   return summary;
 }
 
@@ -440,13 +440,13 @@ function handleSaveToServices() {
     }, 2000);
     return;
   }
-  
+
   // Close any existing tooltip
   if (activeTooltip) {
     activeTooltip.remove();
     activeTooltip = null;
   }
-  
+
   // Show export dialog
   const dialog = el(`
     <div class="sc-modal-overlay">
@@ -464,15 +464,15 @@ function handleSaveToServices() {
           <p>Choose where to export your conversation:</p>
           <div class="sc-export-options">
             <div class="sc-export-option" data-service="keep">
-              <img src="images/keep.svg" alt="Google Keep" width="24" height="24">
+              <img src="https://ssl.gstatic.com/keep/keep.ico" alt="Google Keep" width="24" height="24">
               <span>Google Keep</span>
             </div>
             <div class="sc-export-option" data-service="docs">
-              <img src="images/docs.svg" alt="Google Docs" width="24" height="24">
+              <img src="https://cdn4.iconfinder.com/data/icons/free-colorful-icons/360/google_docs.png" alt="Google Docs" width="24" height="24">
               <span>Google Docs</span>
             </div>
             <div class="sc-export-option" data-service="notebook">
-              <img src="images/notebook.svg" alt="NotebookLM" width="24" height="24">
+              <img src="https://styles.redditmedia.com/t5_8ttjd0/styles/communityIcon_1mumpp971zte1.jpg" alt="NotebookLM" width="24" height="24">
               <span>NotebookLM</span>
             </div>
           </div>
@@ -480,15 +480,15 @@ function handleSaveToServices() {
       </div>
     </div>
   `);
-  
+
   document.body.appendChild(dialog);
-  
+
   // Handle close button click
   dialog.querySelector('.sc-modal-close').addEventListener('click', () => {
     dialog.classList.add('fade-out');
     setTimeout(() => dialog.remove(), 300);
   });
-  
+
   // Handle export option clicks
   dialog.querySelectorAll('.sc-export-option').forEach(option => {
     option.addEventListener('click', () => {
@@ -499,7 +499,7 @@ function handleSaveToServices() {
           <p>Exporting to ${option.querySelector('span').textContent}...</p>
         </div>
       `;
-      
+
       // Simulate export process (would be API call in a real app)
       setTimeout(() => {
         const serviceName = option.querySelector('span').textContent;
@@ -511,7 +511,7 @@ function handleSaveToServices() {
             <p>Successfully exported to ${serviceName}!</p>
           </div>
         `;
-        
+
         // Auto-close after delay
         setTimeout(() => {
           dialog.classList.add('fade-out');
@@ -523,19 +523,19 @@ function handleSaveToServices() {
 }
 
 // Handle save button click
-function handleSave(){
+function handleSave() {
   // Create a dropdown menu for save options
   if (activeTooltip) {
     activeTooltip.remove();
     activeTooltip = null;
   }
-  
+
   const saveOptions = [
     { name: 'Save to Google Keep', icon: 'keep.svg' },
     { name: 'Save to Google Docs', icon: 'docs.svg' },
     { name: 'Save to NotebookLM', icon: 'notebook.svg' }
   ];
-  
+
   const saveMenu = el(`
     <div class="sc-tooltip sc-save-menu">
       <div class="sc-tooltip-title">Save conversation</div>
@@ -549,29 +549,29 @@ function handleSave(){
       </div>
     </div>
   `);
-  
+
   document.body.appendChild(saveMenu);
   activeTooltip = saveMenu;
-  
+
   // Position the menu near the save button
   const btnRect = saveBtn.getBoundingClientRect();
   saveMenu.style.left = `${btnRect.left - 180}px`;
   saveMenu.style.top = `${btnRect.bottom + 10}px`;
   saveMenu.style.display = 'block';
-  
+
   // Add click handlers to options
   const options = saveMenu.querySelectorAll('.sc-save-option');
   options.forEach(opt => {
     opt.addEventListener('click', () => {
       const service = opt.dataset.service;
       console.log(`Saving conversation to ${service}:`, convo);
-      
+
       // Show success message
       saveMenu.innerHTML = `
         <div class="sc-tooltip-title">Success!</div>
         <div>Conversation saved to ${opt.textContent.trim()}</div>
       `;
-      
+
       // Auto-close after delay
       setTimeout(() => {
         saveMenu.remove();
@@ -590,14 +590,14 @@ document.addEventListener('click', (e) => {
 });
 
 // Handle form submission
-function handleSubmit(e){
+function handleSubmit(e) {
   e.preventDefault();
   const text = inputEl.value.trim();
-  if(!text) return;
-  
+  if (!text) return;
+
   // Clear the input field
   inputEl.value = '';
-  
+
   // Check if we should use stored messages (first user interaction)
   if (convo.messages.length === 1 && convo.storedMessages && convo.storedMessages.length >= 2) {
     // Immediately show the stored user question
@@ -605,7 +605,7 @@ function handleSubmit(e){
     convo.messages.push(storedUserMessage);
     renderBubble(storedUserMessage);
     messagesEl.scrollTop = messagesEl.scrollHeight;
-    
+
     // After 500ms, show the typing indicator
     setTimeout(() => {
       // Show typing indicator
@@ -617,7 +617,7 @@ function handleSubmit(e){
       convo.messages.push(typingIndicator);
       renderBubble(typingIndicator);
       messagesEl.scrollTop = messagesEl.scrollHeight;
-      
+
       // After 2 seconds, show the stored bot response
       setTimeout(() => {
         // Remove typing indicator from DOM
@@ -626,10 +626,10 @@ function handleSubmit(e){
           const messageEl = typingEl.closest('.sc-message');
           if (messageEl) messageEl.remove();
         }
-        
+
         // Remove typing indicator from conversation
         convo.messages.pop();
-        
+
         // Add stored bot response
         const storedBotResponse = convo.storedMessages[1];
         convo.messages.push(storedBotResponse);
@@ -639,10 +639,10 @@ function handleSubmit(e){
     }, 500);
   } else {
     // If not the first interaction, add the user message normally
-    const userMessage = {role:'user', text};
+    const userMessage = { role: 'user', text };
     convo.messages.push(userMessage);
     renderBubble(userMessage);
-    
+
     // Show typing indicator
     const typingIndicator = {
       role: 'bot',
@@ -652,7 +652,7 @@ function handleSubmit(e){
     convo.messages.push(typingIndicator);
     renderBubble(typingIndicator);
     messagesEl.scrollTop = messagesEl.scrollHeight;
-    
+
     // Generate response after 2 second delay
     setTimeout(() => {
       // Remove typing indicator from DOM
@@ -661,16 +661,16 @@ function handleSubmit(e){
         const messageEl = typingEl.closest('.sc-message');
         if (messageEl) messageEl.remove();
       }
-      
+
       // Remove typing indicator from conversation
       convo.messages.pop();
-      
+
       // For the hardcoded example, use a generic response about rivers
       const response = {
         role: 'bot',
         text: 'Rivers are vital freshwater resources and natural habitats. They provide water for drinking, agriculture, and industry, while also serving as transportation routes and energy sources through hydroelectric power. Rivers shape landscapes through erosion and deposition, creating valleys, canyons, and floodplains. They\'re essential for biodiversity, supporting countless species of plants, animals, and microorganisms. Throughout human history, major civilizations have developed along rivers like the Nile, Indus, Yellow, and Tigris-Euphrates, which provided fertile soil for agriculture. [1][2]'
       };
-      
+
       convo.messages.push(response);
       renderBubble(response);
       messagesEl.scrollTop = messagesEl.scrollHeight;
@@ -682,7 +682,7 @@ function handleSubmit(e){
 function generateResponse(userText) {
   const lowerText = userText.toLowerCase();
   const query = convo.query.toLowerCase();
-  
+
   // Initialize sources if not already done
   if (!convo.sources[1]) {
     convo.sources[1] = {
@@ -690,21 +690,21 @@ function generateResponse(userText) {
       url: "https://example.com/result1"
     };
   }
-  
+
   if (!convo.sources[2]) {
     convo.sources[2] = {
       title: "Search result 2",
       url: "https://example.com/result2"
     };
   }
-  
+
   // Respond based on the query and user text
   if (lowerText.includes('what is') || lowerText.includes('tell me about')) {
     return {
       role: 'assistant',
       text: `Based on search results, ${convo.query} is a topic with several important aspects. The main information available shows it's a significant subject with multiple perspectives. Would you like me to explore a specific aspect in more detail? [1][2]`
     };
-  } 
+  }
   else if (lowerText.includes('how') || lowerText.includes('when')) {
     return {
       role: 'assistant',
@@ -719,7 +719,7 @@ function generateResponse(userText) {
         url: "https://maps.example.com/search?q=" + encodeURIComponent(convo.query)
       };
     }
-    
+
     return {
       role: 'assistant',
       text: `The search for ${convo.query} shows several relevant locations. The most significant ones appear in the search results, with varying relevance depending on your specific interests. Would you like me to focus on a particular region or aspect of these locations? [2][3]`
