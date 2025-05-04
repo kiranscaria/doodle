@@ -3078,50 +3078,63 @@ main {
 /* Footer styles */
 footer {
     background-color: #f2f2f2;
-    padding: 16px;
+    padding: 0;
     margin-top: auto;
+    border-top: 1px solid #dadce0;
+    font-family: Arial, sans-serif;
 }
 
 .footer-content {
     max-width: 1140px;
     margin: 0 auto;
+    padding: 0 20px;
 }
 
 .location {
     display: flex;
     align-items: center;
-    padding: 16px;
+    padding: 15px 0;
     color: #70757a;
     font-size: 14px;
     border-bottom: 1px solid #dadce0;
 }
 
 .location-dot {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
-    background-color: #70757a;
+    background-color: #9aa0a6;
     margin-right: 8px;
+    display: inline-block;
 }
 
 .location a {
-    color: #70757a;
-    margin-left: 8px;
+    color: #1a0dab;
+    text-decoration: none;
+}
+
+.location a:hover {
+    text-decoration: underline;
 }
 
 .footer-nav {
-    padding: 16px;
+    padding: 15px 0;
 }
 
 .footer-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 30px;
+    gap: 28px;
 }
 
 .footer-row a {
     color: #70757a;
     font-size: 14px;
+    text-decoration: none;
+}
+
+.footer-row a:hover {
+    text-decoration: underline;
 }
 
 /* Responsive adjustments */
