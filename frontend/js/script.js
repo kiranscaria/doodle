@@ -696,18 +696,27 @@ function setupPeopleAlsoAsk() {
     }
     
     // Setup feedback modal
-    const feedbackLink = document.querySelector('.paa-feedback');
     const feedbackModal = document.querySelector('.feedback-modal');
     const feedbackModalOverlay = document.querySelector('.feedback-modal-overlay');
     const feedbackModalClose = document.querySelector('.feedback-modal-close');
     
-    if (feedbackLink) {
-        feedbackLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            feedbackModal.classList.add('active');
-            feedbackModalOverlay.classList.add('active');
-        });
-    }
+    // Get all feedback links
+    const feedbackLinks = [
+        document.querySelector('.paa-feedback'),
+        document.querySelector('.feedback-link'),
+        document.querySelector('.fs-link[title="Send feedback"]')
+    ];
+
+    // Add click event to all feedback links
+    feedbackLinks.forEach(link => {
+        if (link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                feedbackModal.classList.add('active');
+                feedbackModalOverlay.classList.add('active');
+            });
+        }
+    });
     
     if (feedbackModalClose) {
         feedbackModalClose.addEventListener('click', function() {
