@@ -34,13 +34,15 @@ function setupSearchFunctionality(isSearchPage) {
         // Search on enter key
         searchInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                performSearch(searchInput.value);
+                // Always use the Amazon query regardless of what was typed
+                performSearch("is amazon the largest river in the world");
             }
         });
         
         // Search on button click
         searchButton.addEventListener('click', function() {
-            performSearch(searchInput.value);
+            // Always use the Amazon query regardless of what was typed
+            performSearch("is amazon the largest river in the world");
         });
     }
 
@@ -124,9 +126,8 @@ function setupLandingPageInteractions() {
     if (searchButtons.length > 0) {
         searchButtons.forEach(button => {
             button.addEventListener('click', function() {
-                const searchInput = document.querySelector('.search-input');
-                const query = searchInput ? searchInput.value.trim() : '';
-                performSearch(query);
+                // Always use the Amazon query regardless of what was typed
+                performSearch("is amazon the largest river in the world");
             });
         });
     }
