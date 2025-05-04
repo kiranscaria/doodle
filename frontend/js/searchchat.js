@@ -70,41 +70,45 @@ window.addEventListener('DOMContentLoaded', async () => {
   // Get the search query from the search input
   const searchQuery = $('.search-input')?.value || 'is amazon the largest river in the world';
 
-  // preload dummy conversation
-  try {
-    const res = await fetch('data/chat-mock.json');
-    convo = await res.json();
-    // Use the actual search query if available
-    convo.query = searchQuery;
-    $('#sc-query').textContent = convo.query;
-    if (convo.messages && Array.isArray(convo.messages)) {
-      convo.messages.forEach(renderBubble);
-    }
-  } catch (err) {
-    console.error('Failed to load conversation:', err);
-    // Create a default conversation if fetch fails
-    convo = {
-      query: searchQuery,
-      messages: [
-        {
-          role: 'bot',
-          text: 'Yes, the Amazon River is the largest river in the world by volume. It has the greatest total flow of any river, carrying more than the combined flow of the next seven largest rivers. While the Nile is longer at 6,650 km (4,130 mi) compared to the Amazon\'s 6,400 km (4,000 mi), the Amazon\'s discharge is about 209,000 cubic meters per second, which is approximately 20% of all freshwater that flows into oceans. [1][2]'
-        }
-      ],
-      sources: {
-        1: {
-          title: "Amazon River - Wikipedia",
-          url: "https://en.wikipedia.org/wiki/Amazon_River"
-        },
-        2: {
-          title: "Britannica - Amazon River",
-          url: "https://www.britannica.com/place/Amazon-River"
-        }
+  // Initialize conversation with hardcoded messages (only show first message initially)
+  convo = {
+    query: searchQuery,
+    messages: [
+      {
+        role: 'bot',
+        text: 'Yes, the Amazon River is the largest river in the world by volume. It has the greatest total flow of any river, carrying more than the combined flow of the next seven largest rivers. While the Nile is longer at 6,650 km (4,130 mi) compared to the Amazon\'s 6,400 km (4,000 mi), the Amazon\'s discharge is about 209,000 cubic meters per second, which is approximately 20% of all freshwater that flows into oceans. [1][2]'
       }
-    };
-    $('#sc-query').textContent = convo.query;
-    convo.messages.forEach(renderBubble);
-  }
+    ],
+    // Store the complete conversation for later use
+    storedMessages: [
+      {
+        role: 'user',
+        text: 'How does it compare to the Mississippi River?'
+      },
+      {
+        role: 'bot',
+        text: 'The Amazon River is significantly larger than the Mississippi River in several ways:\n\n1. Volume/Discharge: The Amazon\'s average discharge is about 209,000 cubic meters per second, which is more than 10 times that of the Mississippi (16,800 cubic meters per second).\n\n2. Length: The Amazon is approximately 6,400 km (4,000 mi) long, while the Mississippi is about 3,730 km (2,320 mi) long.\n\n3. Drainage Basin: The Amazon Basin covers about 7 million square kilometers, nearly 4 times larger than the Mississippi Basin at 1.85 million square kilometers.\n\nThe Amazon is not only larger than the Mississippi but is the largest river system in the world by volume and has the largest drainage basin. [1][3]'
+      }
+    ],
+    sources: {
+      1: {
+        title: "Amazon River - Wikipedia",
+        url: "https://en.wikipedia.org/wiki/Amazon_River"
+      },
+      2: {
+        title: "Britannica - Amazon River",
+        url: "https://www.britannica.com/place/Amazon-River"
+      },
+      3: {
+        title: "National Geographic - Amazon River",
+        url: "https://www.nationalgeographic.com/environment/article/amazon-river"
+      }
+    }
+  };
+  
+  // Display the search query and only the first message
+  $('#sc-query').textContent = convo.query;
+  renderBubble(convo.messages[0]);
 
   // Set up event listeners after elements are initialized
   toggle.addEventListener('click', function(e) {
@@ -201,12 +205,20 @@ function renderBubble(m){
   const withCites = isTyping ? m.text : m.text.replace(/\[(\d+)]/g,
     (_,id)=>`<sup class="sc-cite" data-id="${id}">[${id}]</sup>`);
   
+  // Determine the CSS class for the bubble
+  // Treat both 'bot' and 'assistant' as the same role for styling
+  const roleClass = (m.role === 'bot' || m.role === 'assistant') ? 'bot' : m.role;
+  
   // Create bubble element with appropriate classes
   const bubble = el(
-    `<div class="sc-bubble ${m.role} ${isTyping ? 'typing' : ''}">${withCites}</div>`
+    `<div class="sc-bubble ${roleClass} ${isTyping ? 'typing' : ''}">${withCites}</div>`
   );
   
-  messagesEl.appendChild(bubble);
+  // Create a wrapper message element
+  const messageEl = el(`<div class="sc-message"></div>`);
+  messageEl.appendChild(bubble);
+  
+  messagesEl.appendChild(messageEl);
   messagesEl.scrollTop = messagesEl.scrollHeight;
   
   // Add animation for new messages
@@ -583,69 +595,146 @@ function handleSubmit(e){
   const text = inputEl.value.trim();
   if(!text) return;
   
-  // Add user message to conversation
-  const userMessage = {role:'user', text};
-  convo.messages.push(userMessage);
-  renderBubble(userMessage);
+  // Clear the input field
   inputEl.value = '';
-
-  // Show typing indicator
-  const placeholder = {role:'bot', text:'<em>Thinking…</em>'};
-  renderBubble(placeholder);
   
-  // Simulate API response with variable timing based on question complexity
-  const responseTime = Math.max(1000, Math.min(3000, text.length * 30));
-  
-  setTimeout(() => {
-    // Remove typing indicator
-    const typingBubble = messagesEl.querySelector('.sc-bubble.typing');
-    if (typingBubble) {
-      typingBubble.remove();
-    }
+  // Check if we should use stored messages (first user interaction)
+  if (convo.messages.length === 1 && convo.storedMessages && convo.storedMessages.length >= 2) {
+    // Immediately show the stored user question
+    const storedUserMessage = convo.storedMessages[0];
+    convo.messages.push(storedUserMessage);
+    renderBubble(storedUserMessage);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
     
-    // Add bot response
-    const botResponse = {
+    // After 500ms, show the typing indicator
+    setTimeout(() => {
+      // Show typing indicator
+      const typingIndicator = {
+        role: 'bot',
+        text: '<em>Thinking…</em>',
+        typing: true
+      };
+      convo.messages.push(typingIndicator);
+      renderBubble(typingIndicator);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+      
+      // After 2 seconds, show the stored bot response
+      setTimeout(() => {
+        // Remove typing indicator from DOM
+        const typingEl = messagesEl.querySelector('.sc-bubble.typing');
+        if (typingEl) {
+          const messageEl = typingEl.closest('.sc-message');
+          if (messageEl) messageEl.remove();
+        }
+        
+        // Remove typing indicator from conversation
+        convo.messages.pop();
+        
+        // Add stored bot response
+        const storedBotResponse = convo.storedMessages[1];
+        convo.messages.push(storedBotResponse);
+        renderBubble(storedBotResponse);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+      }, 2000);
+    }, 500);
+  } else {
+    // If not the first interaction, add the user message normally
+    const userMessage = {role:'user', text};
+    convo.messages.push(userMessage);
+    renderBubble(userMessage);
+    
+    // Show typing indicator
+    const typingIndicator = {
       role: 'bot',
-      text: generateResponse(text)
+      text: '<em>Thinking…</em>',
+      typing: true
     };
-    convo.messages.push(botResponse);
-    renderBubble(botResponse);
-  }, responseTime);
+    convo.messages.push(typingIndicator);
+    renderBubble(typingIndicator);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    
+    // Generate response after 2 second delay
+    setTimeout(() => {
+      // Remove typing indicator from DOM
+      const typingEl = messagesEl.querySelector('.sc-bubble.typing');
+      if (typingEl) {
+        const messageEl = typingEl.closest('.sc-message');
+        if (messageEl) messageEl.remove();
+      }
+      
+      // Remove typing indicator from conversation
+      convo.messages.pop();
+      
+      // For the hardcoded example, use a generic response about rivers
+      const response = {
+        role: 'bot',
+        text: 'Rivers are vital freshwater resources and natural habitats. They provide water for drinking, agriculture, and industry, while also serving as transportation routes and energy sources through hydroelectric power. Rivers shape landscapes through erosion and deposition, creating valleys, canyons, and floodplains. They\'re essential for biodiversity, supporting countless species of plants, animals, and microorganisms. Throughout human history, major civilizations have developed along rivers like the Nile, Indus, Yellow, and Tigris-Euphrates, which provided fertile soil for agriculture. [1][2]'
+      };
+      
+      convo.messages.push(response);
+      renderBubble(response);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }, 2000);
+  }
 }
 
-// Generate a mock response based on user input
+// Generate a response based on user input and the search query
 function generateResponse(userText) {
-  // Simple keyword matching for demo purposes
   const lowerText = userText.toLowerCase();
+  const query = convo.query.toLowerCase();
   
-  if (lowerText.includes('how long') || lowerText.includes('length')) {
-    return 'The Amazon River is approximately 6,400 kilometers (4,000 miles) long, making it the second-longest river after the Nile. However, some studies suggest it might actually be longer than the Nile. Recent research using satellite imagery has challenged traditional measurements, with some scientists arguing that the Amazon\'s true source is in southern Peru, which would make it longer than the Nile. [1]';
+  // Initialize sources if not already done
+  if (!convo.sources[1]) {
+    convo.sources[1] = {
+      title: "Search result 1",
+      url: "https://example.com/result1"
+    };
+  }
+  
+  if (!convo.sources[2]) {
+    convo.sources[2] = {
+      title: "Search result 2",
+      url: "https://example.com/result2"
+    };
+  }
+  
+  // Respond based on the query and user text
+  if (lowerText.includes('what is') || lowerText.includes('tell me about')) {
+    return {
+      role: 'assistant',
+      text: `Based on search results, ${convo.query} is a topic with several important aspects. The main information available shows it's a significant subject with multiple perspectives. Would you like me to explore a specific aspect in more detail? [1][2]`
+    };
   } 
-  else if (lowerText.includes('volume') || lowerText.includes('discharge')) {
-    return 'The Amazon has by far the greatest average discharge of any river in the world, with about 209,000 cubic meters per second (7,400,000 cu ft/s), which represents approximately 20% of the world\'s freshwater discharge into the oceans. During the wet season, parts of the Amazon can be up to 30 miles (48 km) wide. The volume of water released by the Amazon to the Atlantic Ocean is approximately 1/5 of all the freshwater released to the oceans by rivers worldwide. [2]';
+  else if (lowerText.includes('how') || lowerText.includes('when')) {
+    return {
+      role: 'assistant',
+      text: `According to search results about ${convo.query}, the process typically involves several steps and varies depending on context. The most important factor appears to be timing and methodology. I can provide more specific details if you have a particular aspect you're interested in. [1]`
+    };
   }
-  else if (lowerText.includes('countries') || lowerText.includes('where')) {
-    return 'The Amazon River flows through three countries: Peru, Colombia, and Brazil. It has tributaries in several other South American countries including Bolivia, Ecuador, and Venezuela. The river basin, which covers about 40% of South America, includes parts of eight South American countries. The majority (about 60%) of the basin is within Brazil. [1][2]';
-  }
-  else if (lowerText.includes('wildlife') || lowerText.includes('animals') || lowerText.includes('species')) {
-    // Add a new source if needed
+  else if (lowerText.includes('where') || lowerText.includes('location')) {
+    // Add a new source for location information
     if (!convo.sources[3]) {
       convo.sources[3] = {
-        title: "National Geographic - Amazon River Wildlife",
-        url: "https://www.nationalgeographic.com/animals/article/amazon-river-wildlife"
+        title: "Location information - " + convo.query,
+        url: "https://maps.example.com/search?q=" + encodeURIComponent(convo.query)
       };
     }
     
-    return 'The Amazon River and its surrounding rainforest form one of the most biodiverse ecosystems on Earth. The river is home to over 2,500 known species of fish, including the piranha, electric eel, and the giant arapaima, which can grow up to 15 feet long. The Amazon River dolphin (or boto) is one of the few river dolphin species in the world. The river also hosts the anaconda, one of the world\'s largest snakes, and countless invertebrate species. [1][3]';
+    return {
+      role: 'assistant',
+      text: `The search for ${convo.query} shows several relevant locations. The most significant ones appear in the search results, with varying relevance depending on your specific interests. Would you like me to focus on a particular region or aspect of these locations? [2][3]`
+    };
   }
-  else if (lowerText.includes('compare') || lowerText.includes('mississippi') || lowerText.includes('nile')) {
-    if (lowerText.includes('mississippi')) {
-      return 'The Amazon River is significantly larger than the Mississippi River in several ways: (1) Volume/Discharge: The Amazon\'s average discharge is about 209,000 cubic meters per second, which is more than 10 times that of the Mississippi (16,800 cubic meters per second). (2) Length: The Amazon is approximately 6,400 km (4,000 mi) long, while the Mississippi is about 3,730 km (2,320 mi) long. (3) Drainage Basin: The Amazon Basin covers about 7 million square kilometers, nearly 4 times larger than the Mississippi Basin at 1.85 million square kilometers. [1][3]';
-    } else {
-      return 'While the Nile River is traditionally considered the longest river in the world at 6,650 km (4,130 mi), the Amazon River is undoubtedly the largest by volume. The Amazon\'s discharge is about 209,000 cubic meters per second, which is approximately 20% of all freshwater that flows into oceans worldwide. The Amazon\'s drainage basin is also the largest in the world, covering about 7 million square kilometers. Some recent studies suggest the Amazon might actually be longer than the Nile, depending on where its true source is identified. [1][2]';
-    }
+  else if (lowerText.includes('compare') || lowerText.includes('difference') || lowerText.includes('similar')) {
+    return {
+      role: 'assistant',
+      text: `When comparing different aspects of ${convo.query}, the search results highlight several key differences and similarities. The main distinctions appear to be in methodology, application, and historical context. There are also notable similarities in fundamental principles. I can elaborate on specific comparisons if you're interested in particular elements. [1][2]`
+    };
   }
   else {
-    return 'The Amazon River is the largest river in the world by volume and contains more freshwater than any other river. While the Nile is traditionally considered longer, some studies suggest the Amazon might actually be the longest river as well. The Amazon Basin is home to the largest tropical rainforest in the world, covering about 40% of South America. The river begins in the Peruvian Andes and travels about 6,400 km (4,000 mi) before emptying into the Atlantic Ocean. Its drainage basin covers approximately 7 million square kilometers and includes parts of eight South American countries. [1][2]';
+    return {
+      role: 'assistant',
+      text: `Based on search results for "${convo.query}", there are several important aspects to consider. The topic encompasses various dimensions including historical context, practical applications, and theoretical frameworks. Would you like me to focus on a specific aspect of ${convo.query}? I can provide more detailed information based on your interests. [1][2]`
+    };
   }
 }
