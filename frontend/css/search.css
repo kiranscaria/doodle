@@ -2880,8 +2880,9 @@ main {
 .related-searches .search-item {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     background-color: #f1f3f4;
-    border-radius: 100px;
+    border-radius: 8px;
     padding: 12px 16px;
     cursor: pointer;
     max-width: 360px;
@@ -2895,9 +2896,10 @@ main {
 }
 
 .search-icon {
-    margin-right: 12px;
+    margin-left: 12px;
     display: flex;
     align-items: center;
+    justify-content: flex-end;
 }
 
 .search-icon svg {
@@ -2907,16 +2909,18 @@ main {
 }
 
 .search-text {
-    font-size: 14px;
+    font-size: 16px;
+    font-weight: 500;
     color: #202124;
     font-family: Arial, sans-serif;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    flex: 1;
 }
 
 .highlight {
-    font-weight: bold;
+    font-weight: 700;
 }
 
 /* Google Pagination */
