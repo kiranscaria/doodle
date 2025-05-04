@@ -38,6 +38,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   messagesEl = document.getElementById('sc-messages');
   inputEl = document.getElementById('sc-input');
   formEl = document.getElementById('sc-input-form');
+  createBtn = document.getElementById('sc-create');
   saveBtn = document.getElementById('sc-save');
   closeBtn = document.getElementById('sc-close');
   autoOpenSetting = document.getElementById('sc-auto-open-setting');
@@ -115,33 +116,30 @@ window.addEventListener('DOMContentLoaded', async () => {
     } else {
       openPanel();
     }
-    
-    e.stopPropagation(); // Prevent the click from being handled by the document click handler
   });
   
-  closeBtn.addEventListener('click', function(e) {
+  closeBtn.addEventListener('click', (e) => {
+    e.preventDefault();
     closePanel();
-    e.stopPropagation();
   });
   
-  // Allow clicking outside the drawer to close it
-  document.addEventListener('click', e => {
-    if (panel.classList.contains('open') && 
-        !panel.contains(e.target) && 
-        e.target !== toggle) {
-      closePanel();
-    }
-  });
-  
-  document.addEventListener('keydown', e => {
+  document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && panel.classList.contains('open')) {
       closePanel();
     }
   });
-  formEl.addEventListener('submit', handleSubmit);
   
-  // Save button functionality
-  saveBtn.addEventListener('click', handleSave);
+  createBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    handleCreateNote();
+  });
+  
+  saveBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    handleSaveToServices();
+  });
+  
+  formEl.addEventListener('submit', handleSubmit);
   
   // Add input focus event to show subtle animation
   inputEl.addEventListener('focus', () => {
@@ -285,6 +283,231 @@ function saveUserPreferences() {
   } catch (error) {
     console.error('Error saving user preferences:', error);
   }
+}
+
+// Handle creating a new note (summarize conversation)
+function handleCreateNote() {
+  // Check if there are enough messages to summarize
+  if (convo && convo.messages && convo.messages.length > 1) {
+    // Generate a title based on the conversation
+    const query = document.getElementById('sc-query').textContent || 'Search Chat';
+    const noteTitle = `Summary of "${query}"`;  
+  
+    // Extract content from messages for the summary
+    let contentToSummarize = '';
+    convo.messages.forEach(msg => {
+      if (msg.role === 'system') return; // Skip system messages
+      contentToSummarize += `${msg.role === 'assistant' ? 'SearchChat: ' : 'You: '}${msg.text}\n`;
+    });
+    
+    // Generate a simple summary (in a real app, this could use AI)
+    const summaryText = generateSummary(contentToSummarize, query);
+    
+    // Create a summary note and add it to the conversation
+    const summaryNote = {
+      role: 'system',
+      type: 'note',
+      title: noteTitle,
+      text: summaryText,
+      timestamp: new Date().toISOString()
+    };
+    
+    // Add to conversation data
+    convo.messages.push(summaryNote);
+    
+    // Create and append the note element
+    const noteElement = el(`
+      <div class="sc-message sc-message-note">
+        <div class="sc-note-header">
+          <svg viewBox="0 0 24 24" width="18" height="18">
+            <path fill="#1a73e8" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path>
+          </svg>
+          <h3>${noteTitle}</h3>
+        </div>
+        <div class="sc-message-content">
+          <p>${summaryText.replace(/\n/g, '<br>')}</p>
+        </div>
+      </div>
+    `);
+    
+    messagesEl.appendChild(noteElement);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    
+    // Show a toast notification
+    const toast = el(`
+      <div class="sc-toast">
+        <svg viewBox="0 0 24 24" width="18" height="18">
+          <path fill="#4285f4" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path>
+        </svg>
+        <span>Note created and added to chat</span>
+      </div>
+    `);
+    document.body.appendChild(toast);
+    
+    // Remove toast after delay
+    setTimeout(() => {
+      toast.classList.add('fade-out');
+      setTimeout(() => toast.remove(), 300);
+    }, 2000);
+  } else {
+    // Not enough content to summarize
+    const toast = el(`
+      <div class="sc-toast">
+        <svg viewBox="0 0 24 24" width="18" height="18">
+          <path fill="#EA4335" d="M11 15h2v2h-2v-2zm0-8h2v6h-2V7zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"></path>
+        </svg>
+        <span>Need more conversation before creating a note</span>
+      </div>
+    `);
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+      toast.classList.add('fade-out');
+      setTimeout(() => toast.remove(), 300);
+    }, 2000);
+  }
+}
+
+// Simple function to generate a summary
+function generateSummary(content, query) {
+  // In a real app, this would use AI or a more sophisticated algorithm
+  // For now, we'll create a simple summary
+  const lines = content.split('\n').filter(line => line.trim() !== '');
+  let summary = `This is a summary of your conversation about "${query}":\n\n`;
+  
+  // Add key points (simplified version)
+  summary += "Key points discussed:\n";
+  
+  // Extract some points from the conversation
+  const pointsExtracted = new Set();
+  lines.forEach(line => {
+    // Skip short lines or lines that start with "You:"
+    if (line.length < 40 || line.startsWith('You:')) return;
+    
+    // Extract a potential point (first 60 chars)
+    const point = line.substring(0, 60).trim();
+    if (!point.endsWith('.')) {
+      pointsExtracted.add(point + '...');
+    } else {
+      pointsExtracted.add(point);
+    }
+  });
+  
+  // Add up to 3 points
+  const points = Array.from(pointsExtracted).slice(0, 3);
+  points.forEach((point, i) => {
+    summary += `${i+1}. ${point}\n`;
+  });
+  
+  if (points.length === 0) {
+    summary += "- No specific points identified\n";
+  }
+  
+  // Add conclusion
+  summary += "\nThis summary was automatically generated based on your conversation.";
+  
+  return summary;
+}
+
+// Handle saving to external services
+function handleSaveToServices() {
+  // Check if we have enough content to save
+  if (!convo || !convo.messages || convo.messages.length === 0) {
+    const toast = el(`
+      <div class="sc-toast">
+        <svg viewBox="0 0 24 24" width="18" height="18">
+          <path fill="#EA4335" d="M11 15h2v2h-2v-2zm0-8h2v6h-2V7zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"></path>
+        </svg>
+        <span>No conversation to save</span>
+      </div>
+    `);
+    document.body.appendChild(toast);
+    setTimeout(() => {
+      toast.classList.add('fade-out');
+      setTimeout(() => toast.remove(), 300);
+    }, 2000);
+    return;
+  }
+  
+  // Close any existing tooltip
+  if (activeTooltip) {
+    activeTooltip.remove();
+    activeTooltip = null;
+  }
+  
+  // Show export dialog
+  const dialog = el(`
+    <div class="sc-modal-overlay">
+      <div class="sc-modal">
+        <div class="sc-modal-header">
+          <h3>Export Conversation</h3>
+          <button class="sc-modal-close">
+            <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20" fill="#5f6368">
+              <path d="M0 0h24v24H0z" fill="none"/>
+              <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+            </svg>
+          </button>
+        </div>
+        <div class="sc-modal-content">
+          <p>Choose where to export your conversation:</p>
+          <div class="sc-export-options">
+            <div class="sc-export-option" data-service="keep">
+              <img src="images/keep.svg" alt="Google Keep" width="24" height="24">
+              <span>Google Keep</span>
+            </div>
+            <div class="sc-export-option" data-service="docs">
+              <img src="images/docs.svg" alt="Google Docs" width="24" height="24">
+              <span>Google Docs</span>
+            </div>
+            <div class="sc-export-option" data-service="notebook">
+              <img src="images/notebook.svg" alt="NotebookLM" width="24" height="24">
+              <span>NotebookLM</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `);
+  
+  document.body.appendChild(dialog);
+  
+  // Handle close button click
+  dialog.querySelector('.sc-modal-close').addEventListener('click', () => {
+    dialog.classList.add('fade-out');
+    setTimeout(() => dialog.remove(), 300);
+  });
+  
+  // Handle export option clicks
+  dialog.querySelectorAll('.sc-export-option').forEach(option => {
+    option.addEventListener('click', () => {
+      const service = option.dataset.service;
+      dialog.querySelector('.sc-modal-content').innerHTML = `
+        <div class="sc-export-progress">
+          <div class="sc-spinner"></div>
+          <p>Exporting to ${option.querySelector('span').textContent}...</p>
+        </div>
+      `;
+      
+      // Simulate export process (would be API call in a real app)
+      setTimeout(() => {
+        const serviceName = option.querySelector('span').textContent;
+        dialog.querySelector('.sc-modal-content').innerHTML = `
+          <div class="sc-export-success">
+            <svg viewBox="0 0 24 24" width="48" height="48">
+              <path fill="#34A853" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
+            </svg>
+            <p>Successfully exported to ${serviceName}!</p>
+          </div>
+        `;
+        
+        // Auto-close after delay
+        setTimeout(() => {
+          dialog.classList.add('fade-out');
+          setTimeout(() => dialog.remove(), 300);
+        }, 1500);
+      }, 1500);
+    });
+  });
 }
 
 // Handle save button click

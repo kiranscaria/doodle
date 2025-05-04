@@ -123,45 +123,96 @@
 
 .sc-toolbar {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
-  border-bottom: 1px solid #e0e0e0;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #dadce0;
   background-color: #f8f9fa;
-  height: 64px;
-  box-sizing: border-box;
+  color: #202124;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.sc-toolbar-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
 }
 
 .sc-chip {
-  background: #f1f3f4;
-  padding: 6px 16px;
+  display: inline-flex;
+  align-items: center;
+  background: #e8f0fe;
+  color: #1a73e8;
   border-radius: 16px;
+  padding: 4px 12px;
   font-size: 13px;
   font-weight: 500;
-  color: #202124;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.05);
 }
 
 .sc-toolbar-actions {
   display: flex;
   margin-left: auto;
-  gap: 4px;
+  gap: 12px;
 }
 
 .sc-icon-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  position: relative;
 }
 
 .sc-icon-btn:hover {
-  background: #f1f3f4;
+  background-color: rgba(26, 115, 232, 0.08);
+}
+
+.sc-icon-btn:active {
+  background-color: rgba(26, 115, 232, 0.12);
+}
+
+.sc-icon-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Tooltip styles */
+.sc-tooltip {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.1s ease-in;
+  z-index: 100;
+  margin-top: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  visibility: hidden;
+}
+
+.sc-icon-btn:hover .sc-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
 }
 
 .sc-messages {
@@ -332,12 +383,188 @@
 }
 
 .sc-save-option:hover {
-  background: #f1f3f4;
+  background-color: #f1f3f4;
 }
 
 .sc-save-option img {
   width: 16px;
   height: 16px;
+}
+
+/* Toast notification */
+.sc-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #323232;
+  color: white;
+  padding: 12px 16px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  font-size: 14px;
+}
+
+/* Note styles */
+.sc-message-note {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #dadce0;
+  padding: 12px;
+  margin: 12px 0;
+}
+
+.sc-note-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #ebedef;
+}
+
+.sc-note-header h3 {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a73e8;
+  margin: 0;
+}
+
+/* Modal dialog for export */
+.sc-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.sc-modal {
+  background-color: white;
+  border-radius: 8px;
+  max-width: 480px;
+  width: 90%;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  animation: slideIn 0.2s ease-in-out;
+}
+
+.sc-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #dadce0;
+}
+
+.sc-modal-header h3 {
+  font-size: 18px;
+  font-weight: 500;
+  color: #202124;
+  margin: 0;
+}
+
+.sc-modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sc-modal-content {
+  padding: 20px;
+}
+
+.sc-export-options {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.sc-export-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  flex: 1;
+}
+
+.sc-export-option:hover {
+  background-color: #f1f3f4;
+}
+
+.sc-export-option span {
+  font-size: 14px;
+  color: #202124;
+}
+
+.sc-export-progress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 0;
+}
+
+.sc-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #e8eaed;
+  border-radius: 50%;
+  border-top-color: #1a73e8;
+  animation: spinner 1s linear infinite;
+}
+
+.sc-export-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 0;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes spinner {
+  to { transform: rotate(360deg); }
+}
+
+.sc-toast svg {
+  flex-shrink: 0;
+}
+
+/* Toast animation */
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.fade-out {
+  animation: fadeOut 0.5s forwards;
 }
 
 /* Typing animation */
