@@ -10,6 +10,7 @@
 </head>
 
 <body>
+
     <div class="container">
         <header>
             <div class="header-content">
@@ -360,6 +361,8 @@
 
         <main>
             <div class="search-results">
+                <!-- Featured snippet content here -->
+                
                 <!-- People also ask drawer -->
                 <div class="paa-drawer-overlay"></div>
                 <div class="paa-drawer">
@@ -430,6 +433,13 @@
                                 <div class="source-url">https://en.wikipedia.org › wiki › Amazon_River</div>
                             </div>
                             <div class="source-options">
+                                <!-- SearchChat Toggle Button (Integrated with Source Options) -->
+                                <button id="sc-toggle" aria-label="Ask about the Amazon River" class="sc-toggle sc-toggle-icon" hidden>
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18" fill="#5f6368">
+                                        <path d="M0 0h24v24H0V0z" fill="none"/>
+                                        <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/>
+                                    </svg>
+                                </button>
                                 <button class="options-button">
                                     <svg focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                         <path
@@ -444,6 +454,7 @@
                             <a href="#">Amazon River - Wikipedia</a>
                         </div>
                     </div>
+
 
                     <div class="fs-meta">
                         <span class="fs-rule"></span>
@@ -1257,6 +1268,39 @@
     <!-- Voice Search Modal is now inside the search-box div -->
 
     <script src="js/script.js"></script>
+    <link rel="stylesheet" href="css/searchchat.css">
+    <script src="js/searchchat.js" defer></script>
+    
+    <!-- SearchChat Panel (Drawer) positioned below header -->
+    <div id="sc-overlay" class="sc-overlay"></div>
+    <div id="sc-panel" class="sc-panel" aria-hidden="true">
+        <header class="sc-toolbar">
+            <span id="sc-query" class="sc-chip"></span>
+            <div class="sc-toolbar-actions">
+                <button id="sc-save" class="sc-icon-btn" title="Save all">
+                    <img src="images/keep.svg" alt="Save">
+                </button>
+                <button id="sc-close" class="sc-icon-btn" title="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20" fill="#5f6368">
+                        <path d="M0 0h24v24H0V0z" fill="none"/>
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <section id="sc-messages" class="sc-messages"></section>
+
+        <form id="sc-input-form" class="sc-input-row">
+            <input type="text" id="sc-input" placeholder="Ask about these search results..." autocomplete="off">
+            <button type="submit" class="sc-send-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="#ffffff">
+                    <path d="M0 0h24v24H0V0z" fill="none"/>
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2 .01 7z"/>
+                </svg>
+            </button>
+        </form>
+    </div>
 </body>
 
 </html>

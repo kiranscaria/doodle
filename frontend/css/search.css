@@ -1055,6 +1055,7 @@ main {
     width: calc(100% - 160px);
     padding-top: 20px;
     padding-left: 8px;
+    position: relative; /* Add positioning context for the drawer */
 }
 
 .search-result {
@@ -1390,6 +1391,8 @@ main {
 
 .source-options {
     margin-left: auto;
+    display: flex;
+    align-items: center;
 }
 
 .options-button {
@@ -1397,9 +1400,13 @@ main {
     border: none;
     cursor: pointer;
     padding: 4px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
+    vertical-align: middle;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
 }
 
 .options-button svg {
