@@ -83,14 +83,17 @@ function setupSearchFunctionality(isSearchPage) {
  * @param {boolean} feelingLucky - Whether this is an "I'm Feeling Lucky" search
  */
 function performSearch(query, feelingLucky = false) {
+    // Always use "is amazon the largest river in the world" as the search query
+    const amazonQuery = "is amazon the largest river in the world";
+    
     if (query && query.trim() !== '') {
         if (feelingLucky) {
             // For "I'm Feeling Lucky", we would normally go directly to the first result
             // Since this is a demo, we'll simulate this by adding a parameter to the URL
-            window.location.href = `search.html?q=${encodeURIComponent(query)}&lucky=true`;
+            window.location.href = `search.html?q=${encodeURIComponent(amazonQuery)}&lucky=true`;
         } else {
             // Regular search - navigate to the search page with the query
-            window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+            window.location.href = `search.html?q=${encodeURIComponent(amazonQuery)}`;
         }
     }
 }
