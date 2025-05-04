@@ -1849,7 +1849,7 @@ main {
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 0;
+    padding: 0;
     border-bottom: 1px solid #dadce0;
     cursor: pointer;
     position: relative;
@@ -1861,33 +1861,67 @@ main {
     color: #202124;
     font-family: Arial, sans-serif;
     line-height: 1.58;
-    padding-right: 24px;
+    padding: 16px 48px 16px 0;
 }
 
 .paa-arrow {
-    color: #70757a;
-    transition: transform 0.3s ease;
     position: absolute;
     right: 0;
-    width: 24px;
-    height: 24px;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
-    transform: scaleY(0.5);
+    border-radius: 50%;
+    background-color: #f1f3f4;
+    transition: background-color 0.2s ease;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-top: -2px;
+}
+
+.paa-arrow svg {
+    width: 20px;
+    height: 20px;
+    fill: #70757a;
+    transition: transform 0.3s ease;
+    pointer-events: none;
 }
 
 .paa-item[data-expanded="true"] .paa-arrow {
-    transform: scaleY(-0.5);
+    background-color: #f1f3f4;
+}
+
+.paa-item[data-expanded="true"] .paa-arrow svg {
+    transform: rotate(180deg);
+}
+
+.paa-item:hover .paa-arrow {
+    background-color: #e8eaed;
+    cursor: pointer;
+}
+
+.paa-arrow:active {
+    background-color: #f1f3f4 !important;
+}
+
+.paa-arrow:hover {
+    background-color: #e8eaed !important;
+}
+
+/* Ensure consistent styling when expanded */
+.paa-item[data-expanded="true"]:hover .paa-arrow {
+    background-color: #e8eaed;
+}
+
+.paa-item[data-expanded="true"] .paa-arrow:active {
+    background-color: #f1f3f4 !important;
 }
 
 .paa-answer {
     display: none;
     width: 100%;
-    padding-top: 12px;
-    margin-top: 12px;
-    border-top: 1px solid #dfe1e5;
+    padding: 0 0 16px 0;
     font-size: 14px;
     line-height: 1.58;
     color: #4d5156;
@@ -1901,6 +1935,7 @@ main {
     margin-top: 8px;
     font-size: 12px;
     color: #70757a;
+    padding-right: 36px;
 }
 
 .paa-source a {
@@ -1914,6 +1949,11 @@ main {
 
 .paa-item:last-child {
     border-bottom: 1px solid #dadce0;
+}
+
+.paa-answer p {
+    margin: 0 0 8px 0;
+    padding-right: 36px;
 }
 
 /* Remove duplicate style */

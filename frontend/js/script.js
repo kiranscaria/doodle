@@ -643,7 +643,12 @@ function setupPeopleAlsoAsk() {
     
     // Setup PAA item expansion
     paaItems.forEach(item => {
-        item.addEventListener('click', function() {
+        item.addEventListener('click', function(e) {
+            // Don't trigger if clicking on the arrow directly
+            if (e.target.closest('.paa-arrow') && !e.target.closest('.paa-arrow').contains(e.target)) {
+                return;
+            }
+            
             const isExpanded = this.getAttribute('data-expanded') === 'true';
             
             // Close all other items first
@@ -656,6 +661,29 @@ function setupPeopleAlsoAsk() {
             // Toggle current item
             this.setAttribute('data-expanded', !isExpanded ? 'true' : 'false');
         });
+        
+        // Add separate click handler for the arrow
+        const arrow = item.querySelector('.paa-arrow');
+        if (arrow) {
+            arrow.addEventListener('click', function(e) {
+                e.stopPropagation(); // Prevent triggering the parent item's click event
+                e.preventDefault();
+                
+                // Get the parent item
+                const item = this.closest('.paa-item');
+                const isExpanded = item.getAttribute('data-expanded') === 'true';
+                
+                // Close all other items first
+                paaItems.forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.setAttribute('data-expanded', 'false');
+                    }
+                });
+                
+                // Toggle current item
+                item.setAttribute('data-expanded', !isExpanded ? 'true' : 'false');
+            });
+        }
     });
     
     // Setup more options drawer
