@@ -360,12 +360,50 @@
 
         <main>
             <div class="search-results">
+                <!-- People also ask drawer -->
+                <div class="paa-drawer-overlay"></div>
+                <div class="paa-drawer">
+                    <div class="paa-modal-header">
+                        <div class="paa-modal-title">About the source</div>
+                        <button class="paa-modal-close">
+                            <svg focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="#5f6368"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="paa-modal-content">
+                        <p>These are questions that people commonly search for on Google</p>
+                        
+                        <div class="paa-modal-section">
+                            <h3 class="paa-modal-section-title">Your search and this result</h3>
+                            <ul>
+                                <li>These questions are related to your <a href="#">search terms</a> and may be helpful as a next step</li>
+                                <li>This result is in <a href="#">English</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="paa-modal-section">
+                            <div class="paa-modal-item">
+                                <svg class="paa-modal-item-icon" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                                </svg>
+                                <span>How Search works</span>
+                            </div>
+                            <div class="paa-modal-item">
+                                <svg class="paa-modal-item-icon" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M11 17h2v-6h-2v6zm1-15C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM11 9h2V7h-2v2z"></path>
+                                </svg>
+                                <span>Learn more search tips</span>
+                            </div>
+                        </div>
+                        
+                        <p>This is a search result, not an ad. Only ads are paid, and they'll always be labelled with 'Sponsored' or 'Ad'.</p>
+                    </div>
+                </div>
                 <div class="featured-snippet">
                     <div class="featured-content">
                         <div class="featured-text">
-                            <p>While debate as to whether the Amazon or the Nile is the world's longest river has gone on
-                                for many years, the historic consensus of geographic authorities has been to regard the
-                                Amazon as the second longest river in the world, with the Nile being the longest.</p>
+                            <p>While debate as to whether the Amazon or the Nile is the world's longest river has gone on for many years, <strong>the historic consensus of geographic authorities has been to regard the Amazon as the second longest river in the world</strong>, with the Nile being the longest.</p>
                         </div>
                         <div class="featured-image">
                             <img src="images/Amazonrivermap.svg.png" alt="Amazon River Map">
@@ -412,24 +450,31 @@
                 </div>
 
                 <div class="people-also-ask">
-                    <div class="paa-title">People also ask</div>
+                    <div class="paa-title">
+                        People also ask<svg class="more-options" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
+                        </svg>
+                    </div>
                     <div class="paa-item" data-expanded="false">
                         <div class="paa-question">Is the Amazon river the largest river in the world?</div>
-                        <div class="paa-arrow">▼</div>
+                        <div class="paa-arrow">⌵</div>
                     </div>
                     <div class="paa-item" data-expanded="false">
                         <div class="paa-question">Which is largest Amazon or Nile?</div>
-                        <div class="paa-arrow">▼</div>
+                        <div class="paa-arrow">⌵</div>
                     </div>
                     <div class="paa-item" data-expanded="false">
                         <div class="paa-question">Who is the largest river in the world?</div>
-                        <div class="paa-arrow">▼</div>
+                        <div class="paa-arrow">⌵</div>
                     </div>
                     <div class="paa-item" data-expanded="false">
                         <div class="paa-question">Which article is used before Amazon River?</div>
-                        <div class="paa-arrow">▼</div>
+                        <div class="paa-arrow">⌵</div>
                     </div>
+                    <div class="feedback-link-bottom">Feedback</div>
                 </div>
+
+
                 <div class="feedback-link-container">
                     <span class="feedback-link">Feedback</span>
                 </div>

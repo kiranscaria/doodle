@@ -636,7 +636,12 @@ function setupFeaturedSnippet() {
  */
 function setupPeopleAlsoAsk() {
     const paaItems = document.querySelectorAll('.paa-item');
+    const moreOptions = document.querySelector('.more-options');
+    const paaDrawer = document.querySelector('.paa-drawer');
+    const paaDrawerOverlay = document.querySelector('.paa-drawer-overlay');
+    const paaModalClose = document.querySelector('.paa-modal-close');
     
+    // Setup PAA item expansion
     paaItems.forEach(item => {
         item.addEventListener('click', function() {
             const isExpanded = this.getAttribute('data-expanded') === 'true';
@@ -652,6 +657,31 @@ function setupPeopleAlsoAsk() {
             this.setAttribute('data-expanded', !isExpanded ? 'true' : 'false');
         });
     });
+    
+    // Setup more options drawer
+    if (moreOptions) {
+        moreOptions.addEventListener('click', function(e) {
+            e.stopPropagation(); // Prevent triggering parent click events
+            paaDrawer.classList.add('active');
+            paaDrawerOverlay.classList.add('active');
+        });
+    }
+    
+    // Setup drawer close button
+    if (paaModalClose) {
+        paaModalClose.addEventListener('click', function() {
+            paaDrawer.classList.remove('active');
+            paaDrawerOverlay.classList.remove('active');
+        });
+    }
+    
+    // Close drawer when clicking on overlay
+    if (paaDrawerOverlay) {
+        paaDrawerOverlay.addEventListener('click', function() {
+            paaDrawer.classList.remove('active');
+            paaDrawerOverlay.classList.remove('active');
+        });
+    }
 }
     
     // Add search filters toggle
