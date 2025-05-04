@@ -16,12 +16,19 @@ let inputEl;
 let formEl;
 let saveBtn;
 let closeBtn;
+let autoOpenSetting;
+
+// User preferences
+let shouldAutoOpen = true; // Default to true
 
 // Tooltip for citations
 let activeTooltip = null;
 
 // Animation timing
 const TYPING_DELAY = 800; // ms
+
+// Local storage keys
+const STORAGE_KEY_AUTO_OPEN = 'sc_auto_open';
 
 // --------------- init ---------------
 window.addEventListener('DOMContentLoaded', async () => {
@@ -33,12 +40,30 @@ window.addEventListener('DOMContentLoaded', async () => {
   formEl = document.getElementById('sc-input-form');
   saveBtn = document.getElementById('sc-save');
   closeBtn = document.getElementById('sc-close');
+  autoOpenSetting = document.getElementById('sc-auto-open-setting');
   
   console.log('SearchChat elements initialized:', { panel, toggle, messagesEl, inputEl });
   
   // Show toggle only on search page
   if (window.location.pathname.includes('search.html') || true) {
     toggle.hidden = false;
+  }
+  
+  // Load user preferences
+  loadUserPreferences();
+  
+  // Initialize settings toggle
+  if (autoOpenSetting) {
+    autoOpenSetting.checked = shouldAutoOpen;
+    autoOpenSetting.addEventListener('change', () => {
+      shouldAutoOpen = autoOpenSetting.checked;
+      saveUserPreferences();
+    });
+  }
+  
+  // Auto-open the drawer if enabled
+  if (shouldAutoOpen && window.location.pathname.includes('search.html')) {
+    openPanel();
   }
 
   // Get the search query from the search input
@@ -240,8 +265,30 @@ messagesEl.addEventListener('click', e => {
   e.stopPropagation();
 });
 
+// --------------- Preferences ---------------
+// Load user preferences from local storage
+function loadUserPreferences() {
+  try {
+    const autoOpen = localStorage.getItem(STORAGE_KEY_AUTO_OPEN);
+    if (autoOpen !== null) {
+      shouldAutoOpen = autoOpen === 'true';
+    }
+  } catch (error) {
+    console.error('Error loading user preferences:', error);
+  }
+}
+
+// Save user preferences to local storage
+function saveUserPreferences() {
+  try {
+    localStorage.setItem(STORAGE_KEY_AUTO_OPEN, shouldAutoOpen.toString());
+  } catch (error) {
+    console.error('Error saving user preferences:', error);
+  }
+}
+
 // Handle save button click
-function handleSave() {
+function handleSave(){
   // Create a dropdown menu for save options
   if (activeTooltip) {
     activeTooltip.remove();
@@ -269,6 +316,7 @@ function handleSave() {
   `);
   
   document.body.appendChild(saveMenu);
+  activeTooltip = saveMenu;
   
   // Position the menu near the save button
   const btnRect = saveBtn.getBoundingClientRect();
@@ -296,24 +344,15 @@ function handleSave() {
       }, 2000);
     });
   });
-  
-  // Store the active menu
-  activeTooltip = saveMenu;
-  
-  // Close when clicking outside
-  const closeMenuListener = (e) => {
-    if (!e.target.closest('.sc-save-menu') && !e.target.closest('#sc-save')) {
-      saveMenu.remove();
-      activeTooltip = null;
-      document.removeEventListener('click', closeMenuListener);
-    }
-  };
-  
-  // Delay adding the listener to prevent immediate closing
-  setTimeout(() => {
-    document.addEventListener('click', closeMenuListener);
-  }, 10);
 }
+
+// Close when clicking outside of tooltips
+document.addEventListener('click', (e) => {
+  if (activeTooltip && !e.target.closest('.sc-tooltip') && !e.target.closest('#sc-save')) {
+    activeTooltip.remove();
+    activeTooltip = null;
+  }
+});
 
 // Handle form submission
 function handleSubmit(e){
