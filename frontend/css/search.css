@@ -2920,62 +2920,155 @@ main {
 }
 
 /* Google Pagination */
-.google-pagination {
-    margin-top: 30px;
-    margin-bottom: 30px;
-    text-align: center;
+:root {
+    --blue: #4285f4;
+    --red: #ea4335;
+    --yellow: #fbbc05;
+    --green: #34a853;
+
+    --logo-font: 22px/26px "Google Sans", Roboto, Arial, sans-serif;
+    --number-font: 14px/22px "Google Sans", Roboto, Arial, sans-serif;
+    --chevron-size: 10px;
 }
 
-.google-logo {
-    font-size: 22px;
-    margin-bottom: 20px;
-}
-
-.blue {
-    color: #4285f4;
-}
-
-.red {
-    color: #ea4335;
-}
-
-.yellow {
-    color: #fbbc05;
-}
-
-.green {
-    color: #34a853;
-}
-
-.pagination {
+/* Container */
+.g-pagination {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    margin: 30px 0 40px;
+    user-select: none;
+    font-family: Arial, sans-serif;
 }
 
-.page-numbers {
+/* Multicolour Google word */
+.g-logo {
+    font-family: 'Google Sans', Roboto, Arial, sans-serif;
+    font-size: 36px;
+    line-height: 44px;
+    letter-spacing: -1.5px;
+    white-space: nowrap;
+    margin-bottom: 4px;
+    font-weight: 500;
     display: flex;
     align-items: center;
+    gap: 0;
+}
+.g-logo .g-G { color: #4285f4; }
+.g-logo .g-o-red { color: #ea4335; }
+.g-logo .g-o-yellow { color: #fbbc05; }
+.g-logo .g-g { color: #4285f4; }
+.g-logo .g-l { color: #34a853; font-size: 0.7em; font-weight: 700; margin: 0 0.06em 0 0.08em; display: inline-block; width: 0.18em; height: 1em; background: #34a853; border-radius: 2px; vertical-align: middle; }
+.g-logo .g-e { color: #ea4335; }
+.g-logo .g-chevron { display: inline-flex; align-items: center; margin-left: 0.15em; }
+.g-logo .g-chevron svg { width: 20px; height: 20px; fill: #4285f4; }
+.g-logo span:not(.g-l):not(.g-chevron) { font-family: inherit; font-size: inherit; font-weight: 500; margin: 0 0.01em; }
+
+/* colour order: G, o, o (red), o, o … "gle" */
+.g-G {
+    color: var(--blue);
 }
 
-.page {
-    margin: 0 4px;
-    padding: 8px 12px;
-    color: #4285f4;
+.g-o-1 {
+    color: var(--red);
+}
+
+.g-o-2 {
+    color: var(--yellow);
+}
+
+.g-o-3 {
+    color: var(--yellow);
+}
+
+.g-o-4 {
+    color: var(--yellow);
+}
+
+.g-o-5 {
+    color: var(--yellow);
+}
+
+.g-o-6 {
+    color: var(--yellow);
+}
+
+.g-o-7 {
+    color: var(--yellow);
+}
+
+.g-o-8 {
+    color: var(--yellow);
+}
+
+.g-g {
+    color: var(--blue);
+}
+
+.g-l {
+    color: var(--green);
+}
+
+.g-e {
+    color: var(--red);
+}
+
+/* Page number row */
+.g-pages {
+    margin-top: 3px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0;
+    height: 32px;
+    line-height: 32px;
+} 
+
+.g-pages a {
+    color: #1a0dab;
     text-decoration: none;
-    font-size: 14px;
+    padding: 0;
+    font-size: 13px;
+    font-family: Arial, sans-serif;
+    font-weight: normal;
+    transition: text-decoration 0.15s;
 }
-
-.page.active {
+.g-pages a:hover {
+    text-decoration: underline;
+    background: none;
+}
+.g-pages .current {
     color: #000;
     font-weight: bold;
+    pointer-events: none;
+    background: none;
+    text-decoration: none;
+} 
+
+/* Next link */
+.g-next {
+    margin-left: 28px;
+    color: #1a0dab;
+    font-size: 13px;
+    font-family: Arial, sans-serif;
+    font-weight: 400;
+    text-decoration: none;
+    display: inline-block;
+    vertical-align: middle;
+}
+.g-next:hover {
+    text-decoration: underline;
+    background: none;
 }
 
-.next {
-    margin-left: 20px;
-    color: #4285f4;
-    text-decoration: none;
-    font-size: 14px;
+.g-next svg {
+    width: var(--chevron-size);
+    height: var(--chevron-size);
+    fill: #1a73e8;
+    vertical-align: middle;
 }
 
 /* Footer styles */
