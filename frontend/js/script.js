@@ -695,6 +695,34 @@ function setupPeopleAlsoAsk() {
         });
     }
     
+    // Setup feedback modal
+    const feedbackLink = document.querySelector('.paa-feedback');
+    const feedbackModal = document.querySelector('.feedback-modal');
+    const feedbackModalOverlay = document.querySelector('.feedback-modal-overlay');
+    const feedbackModalClose = document.querySelector('.feedback-modal-close');
+    
+    if (feedbackLink) {
+        feedbackLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            feedbackModal.classList.add('active');
+            feedbackModalOverlay.classList.add('active');
+        });
+    }
+    
+    if (feedbackModalClose) {
+        feedbackModalClose.addEventListener('click', function() {
+            feedbackModal.classList.remove('active');
+            feedbackModalOverlay.classList.remove('active');
+        });
+    }
+    
+    if (feedbackModalOverlay) {
+        feedbackModalOverlay.addEventListener('click', function() {
+            feedbackModal.classList.remove('active');
+            feedbackModalOverlay.classList.remove('active');
+        });
+    }
+    
     // Setup drawer close button
     if (paaModalClose) {
         paaModalClose.addEventListener('click', function() {
